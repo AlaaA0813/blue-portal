@@ -61,3 +61,12 @@ label input {
 }
 
 
+
+/**
+ * Elements
+ */
+
+ h1 {
+   background-color: #a6093d;
+   color: #fff;
+ }
