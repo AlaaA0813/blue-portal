@@ -57,3 +57,4 @@ If you want to run tests, you'll have to create a second database according to t
 
 The first command will run the test functions defined in the `tests/` directory. The second gives a more detailed output. Run the third command to generate a report of the code covered by the tests. You can view this report in the terminal with `coverage report` or with more detail in the browser with `coverage html`.
 
+something
