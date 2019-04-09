@@ -23,4 +23,3 @@ def create_app(test_config=None):
         return render_template('index.html')
 
     return app
-

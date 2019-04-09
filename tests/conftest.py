@@ -35,4 +35,27 @@ def client(app):
 
 @pytest.fixture
 def runner(app):
+<<<<<<< HEAD
     return app.test_cli_runner()   
+=======
+    return app.test_cli_runner()
+
+
+class AuthActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def login(self, username='test', password='test'):
+        return self._client.post(
+            '/',
+            data={'username': username, 'password': password}
+        )
+
+    def logout(self):
+        return self._client.get('/')
+
+
+@pytest.fixture
+def auth(client):
+    return AuthActions(client)
+>>>>>>> worked on class Auth for confestt.py, added auth fixture and created a test_login test, 5 passing  test
