@@ -8,7 +8,7 @@ bp = Blueprint('courses', __name__, url_prefix='/courses')
 
 @bp.route('/<int:id>/create', methods=('GET', 'POST'))
 @login_required
-def create_course():
+def create_course(id):
     if request.method == 'POST':
         course = request.form['course']
         title =  request.form['title']
@@ -29,7 +29,7 @@ def create_course():
             cur = db.cursor()
             cur.execute(
                 'INSERT INTO courses (course, title, meets)'
-                'VALUES (%s, %s, %s)',
+                'VALUES (%s, %s, %s);',
                 (course, title, meets)
                 )
             cur.close()
@@ -38,3 +38,12 @@ def create_course():
             return redirect(url_for('courses.list'))
 
     return render_template('courses/create.html')
+
+@bp.route('/<int:id>/list', methods=('GET'))
+@login_required
+def list_courses():
+    db = get_db()
+    cur = db.cursor()
+    cur.execute('SELECT * FROM courses WHERE course_id = id;')
+    cur.close()
+    
