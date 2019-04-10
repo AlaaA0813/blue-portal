@@ -45,5 +45,7 @@ def list_courses():
     db = get_db()
     cur = db.cursor()
     cur.execute('SELECT * FROM courses WHERE course_id = id;')
+    list = cur.fetchall()
     cur.close()
-    
+
+    return render_template('courses/list', list=list)
