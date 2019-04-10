@@ -35,9 +35,6 @@ def client(app):
 
 @pytest.fixture
 def runner(app):
-<<<<<<< HEAD
-    return app.test_cli_runner()   
-=======
     return app.test_cli_runner()
 
 
@@ -58,4 +55,3 @@ class AuthActions(object):
 @pytest.fixture
 def auth(client):
     return AuthActions(client)
->>>>>>> worked on class Auth for confestt.py, added auth fixture and created a test_login test, 5 passing  test

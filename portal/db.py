@@ -38,7 +38,6 @@ def init_db():
         cur.close()
         db.commit()
 
-<<<<<<< HEAD
 def add_user(email, password, role):
     db = get_db()
     cur = db.cursor()
@@ -47,8 +46,6 @@ def add_user(email, password, role):
     db.commit()
 
 
-=======
->>>>>>> worked on class Auth for confestt.py, added auth fixture and created a test_login test, 5 passing  test
 
 @click.command('init-db')
 @with_appcontext
@@ -84,7 +81,4 @@ def add_user_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
-<<<<<<< HEAD
     app.cli.add_command(add_user_command)
-=======
->>>>>>> worked on class Auth for confestt.py, added auth fixture and created a test_login test, 5 passing  test

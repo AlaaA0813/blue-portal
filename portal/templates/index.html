@@ -3,14 +3,17 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-  <form>
-    <label for="email">Email
-      <input type="email" name="email" />
-    </label>
-    <label for="password">Password
-      <input type="password" name="password" />
-    </label>
-    <input type="submit" value="Login" />
-  </form>
+  {% if user_email == None %}
+    <form method="post">
+      <label for="email">Email
+        <input type="email" name="email" />
+      </label>
+      <label for="password">Password
+        <input type="password" name="password" />
+      </label>
+      <input type="submit" value="Login" />
+    </form>
+  {% else %}
+    <p>hello {{user_email}}</p>
+  {% endif %}
 {% endblock %}
-

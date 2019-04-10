@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, session, request
+from werkzeug.security import check_password_hash
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -18,8 +18,44 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    @app.route('/')
+    @app.route('/', methods=["GET", "POST"])
     def index():
-        return render_template('index.html')
+        user_email = None
+
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
+
+            print(email)
+            print(password)
+            #GETS DATABASE
+            con = db.get_db()
+            error = None
+            #SETS ERROR TO NONE AT FIRST
+            cur = con.cursor()
+            cur.execute(
+                'SELECT * FROM users WHERE email = %s', (email,)
+            )
+            user = cur.fetchone()
+                #GET THE EMAIL\
+            print(user)
+            if user is None:
+                #FLASH ERROR IS INCORRECT EMAIL
+                error = 'Incorrect email.'
+            elif not check_password_hash(user[2], password):
+                error = 'Incorrect password.'
+                #FLASH ERROR IF INC0RRECT PASS
+            if error is None:
+                print('got to session')
+                session.clear()
+                session['user_id'] = user[0]
+                session['user_email'] = user[1]
+                #WHERE
+                # return redirect(url_for('index'))
+
+            print(error)
+
+        return render_template('index.html', user_email=session.get('user_email'))
+
 
     return app
