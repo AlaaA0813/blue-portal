@@ -57,5 +57,9 @@ def create_app(test_config=None):
 
         return render_template('index.html', user_email=session.get('user_email'))
 
+        # if user not in session:
+        #     session.clear()
+        #     return redirect(url_for('index'))
+
 
     return app
