@@ -33,10 +33,10 @@ def test_add_user_command(runner, monkeypatch):
     class Recorder(object):
         called = False
 
-    def fake_add_user():
+    def fake_add_user(email, password, role):
         Recorder.called = True
 
-    monkeypatch.setattr('portal.db.add_user', fake_add_user)
+    monkeypatch.setattr('portal.db.add_user', fake_add_user('email', 'password', 'role'))
     result = runner.invoke(args=['add-user'])
     assert 'Begin' in result.output
     assert Recorder.called

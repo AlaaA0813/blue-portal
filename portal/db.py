@@ -40,9 +40,10 @@ def init_db():
 
 def add_user(email, password, role):
     db = get_db()
-    db.execute('INSERT INTO user (email, password, role) VALUES (%s, %s, %s)', (email, generate_password_hash(password), role))
+    cur = db.cursor()
+    cur.execute('INSERT INTO users (email, password, role) VALUES (%s, %s, %s)', (email, generate_password_hash(password), role))
+    cur.close()
     db.commit()
-    db.close()
 
 
 
@@ -57,11 +58,10 @@ def init_db_command():
 @click.command('add-user')
 @with_appcontext
 def add_user_command():
-    """Clear the existing data and create new tables."""
-    init_db()
+    """Add new users to database as requested."""
+    click.echo('Begin adding users')
     cont = True
     num = 0
-    click.echo('Begin adding users')
     while cont == True:
         print('Email?')
         email = input('> ')
