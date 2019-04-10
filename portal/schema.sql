@@ -7,3 +7,9 @@ CREATE TABLE users (
     role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student'))
 );
 
+CREATE TABLE courses (
+    id bigserial PRIMARY KEY,
+    course varchar(15) UNIQUE NOT NULL,
+    title varchar(100) NOT NULL,
+    meets varchar(50) NOT NULL,  
+);
