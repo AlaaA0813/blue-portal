@@ -2,17 +2,24 @@ import pytest
 from flask import g, session
 from portal.db import get_db
 
-def test_login(client, auth):
+def test_login_student(client, auth):
     assert client.get('/').status_code == 200
-    response = auth.login()
-    #assert response.headers['Location'] == 'http://localhost/'
+    response = auth.login_student()
+    assert response.status_code == 200
+    assert b"student@stevenscollege.edu" in response.data
 
+    #if 'user' in session:
     with client:
         client.get('/')
+        assert session['user_id'] == 2
 
-        #assert session['user_id'] == user[0]
-        #assert session['user_email'] = user[1]
+def test_login_teacher(client, auth):
+    assert client.get('/').status_code == 200
+    response = auth.login_teacher()
+    assert response.status_code == 200
+    assert b"teacher@stevenscollege.edu" in response.data
 
-        #assert session['id'] == 0
-
-        #assert g.user['username'] == 'test'
+    #if 'user' in session:
+    with client:
+        client.get('/')
+        assert session['user_id'] == 1

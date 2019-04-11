@@ -21,9 +21,6 @@ def create_app(test_config=None):
     @app.route('/', methods=["GET", "POST"])
     def index():
         user_email = None
-        if request.method =='GET':
-            session.clear()
-
 
         if request.method == 'POST':
             email = request.form['email']
@@ -45,14 +42,17 @@ def create_app(test_config=None):
             if user is None:
                 #FLASH ERROR IS INCORRECT EMAIL
                 error = 'Incorrect email.'
-            elif not check_password_hash(user[2], password):
+            elif user[2] != password:
                 error = 'Incorrect password.'
                 #FLASH ERROR IF INC0RRECT PASS
             if error is None:
-                print('got to session')
+                print('go to session')
                 session.clear()
+                print(user[0])
+                print(user[1])
                 session['user_id'] = user[0]
                 session['user_email'] = user[1]
+                print(session.keys())
                 #WHERE
                 # return redirect(url_for('index'))
 
