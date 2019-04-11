@@ -12,4 +12,5 @@ CREATE TABLE courses (
     course varchar(15) UNIQUE NOT NULL,
     title varchar(100) NOT NULL,
     meets varchar(50) NOT NULL,
+    instructor varchar(100) REFERENCES users(user_id)
 );

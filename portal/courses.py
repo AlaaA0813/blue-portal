@@ -41,10 +41,10 @@ def create_course(id):
 
 @bp.route('/list', methods=('GET'))
 @login_required
-def list_courses():
+def list_courses(user_id):
     db = get_db()
     cur = db.cursor()
-    cur.execute('SELECT * FROM courses WHERE course_id = id;')
+    cur.execute('SELECT * FROM courses WHERE instructor = user_id;')
     list = cur.fetchall()
     cur.close()
 
