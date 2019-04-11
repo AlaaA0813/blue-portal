@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect, url_for
 from werkzeug.security import check_password_hash
 
 def create_app(test_config=None):
@@ -21,6 +21,9 @@ def create_app(test_config=None):
     @app.route('/', methods=["GET", "POST"])
     def index():
         user_email = None
+        if request.method =='GET':
+            session.clear()
+
 
         if request.method == 'POST':
             email = request.form['email']
@@ -60,6 +63,9 @@ def create_app(test_config=None):
         # if user not in session:
         #     session.clear()
         #     return redirect(url_for('index'))
-
+    @app.route('/logout', methods=["GET"])
+    def logout():
+        session.clear()
+        return redirect(url_for('index'))
 
     return app
