@@ -6,7 +6,7 @@ from portal.db import get_db
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
-@bp.route('/<int:id>/create', methods=('GET', 'POST'))
+@bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create_course(id):
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def create_course(id):
 
     return render_template('courses/create.html')
 
-@bp.route('/<int:id>/list', methods=('GET'))
+@bp.route('/list', methods=('GET'))
 @login_required
 def list_courses():
     db = get_db()
@@ -48,4 +48,4 @@ def list_courses():
     list = cur.fetchall()
     cur.close()
 
-    return render_template('courses/list', list=list)
+    return render_template('courses/list.html', list=list)

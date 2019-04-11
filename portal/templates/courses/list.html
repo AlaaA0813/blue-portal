@@ -4,4 +4,14 @@
 
 {% block content %}
 
+<h1>Your Courses</h1>
+
+  <ul>
+    {% for each in list %}
+      <li> {{ courses[1] }} - {{  courses[2] }} - {{ courses[3] }} </li>
+    {% endfor %}
+  </ul>
+
+<a href="{{ url_for('courses.create') }}">Add New Course</a>
+
 {% endblock %}
