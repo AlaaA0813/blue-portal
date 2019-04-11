@@ -26,43 +26,30 @@ def create_app(test_config=None):
             email = request.form['email']
             password = request.form['password']
 
-            print(email)
-            print(password)
-            #GETS DATABASE
             con = db.get_db()
             error = None
-            #SETS ERROR TO NONE AT FIRST
+
             cur = con.cursor()
             cur.execute(
                 'SELECT * FROM users WHERE email = %s', (email,)
             )
             user = cur.fetchone()
-                #GET THE EMAIL\
-            print(user)
+
+
             if user is None:
-                #FLASH ERROR IS INCORRECT EMAIL
                 error = 'Incorrect email.'
+
             elif user[2] != password:
                 error = 'Incorrect password.'
-                #FLASH ERROR IF INC0RRECT PASS
+
             if error is None:
-                print('go to session')
                 session.clear()
-                print(user[0])
-                print(user[1])
                 session['user_id'] = user[0]
                 session['user_email'] = user[1]
-                print(session.keys())
-                #WHERE
-                # return redirect(url_for('index'))
 
-            print(error)
 
         return render_template('index.html', user_email=session.get('user_email'))
 
-        # if user not in session:
-        #     session.clear()
-        #     return redirect(url_for('index'))
     @app.route('/logout', methods=["GET"])
     def logout():
         session.clear()

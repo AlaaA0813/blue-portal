@@ -8,7 +8,7 @@ def test_login_student(client, auth):
     assert response.status_code == 200
     assert b"student@stevenscollege.edu" in response.data
 
-    #if 'user' in session:
+    
     with client:
         client.get('/')
         assert session['user_id'] == 2
@@ -19,7 +19,7 @@ def test_login_teacher(client, auth):
     assert response.status_code == 200
     assert b"teacher@stevenscollege.edu" in response.data
 
-    #if 'user' in session:
+
     with client:
         client.get('/')
         assert session['user_id'] == 1
