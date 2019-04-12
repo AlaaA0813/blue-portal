@@ -68,6 +68,6 @@ def create_app(test_config=None):
             cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
             g.user = cur.fetchone()
             cur.close()
-            # con.close()
+            
 
     return app
