@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS courses;
 
 CREATE TABLE users (
     user_id bigserial PRIMARY KEY,
@@ -12,5 +13,5 @@ CREATE TABLE courses (
     course varchar(15) UNIQUE NOT NULL,
     title varchar(100) NOT NULL,
     meets varchar(50) NOT NULL,
-    instructor varchar(100) REFERENCES users(user_id)
+    instructor integer REFERENCES users(user_id)
 );

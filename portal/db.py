@@ -44,6 +44,7 @@ def add_user(email, password, role):
     cur.execute('INSERT INTO users (email, password, role) VALUES (%s, %s, %s)', (email, generate_password_hash(password), role))
     cur.close()
     db.commit()
+    db.close()
 
 
 

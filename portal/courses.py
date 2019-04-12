@@ -34,18 +34,21 @@ def create_course(id):
                 )
             cur.close()
             db.commit()
+            db.close()
 
             return redirect(url_for('courses.list'))
 
     return render_template('courses/create.html')
 
-@bp.route('/list', methods=('GET'))
+@bp.route('/list')
 @login_required
 def list_courses(user_id):
     db = get_db()
     cur = db.cursor()
     cur.execute('SELECT * FROM courses WHERE instructor = user_id;')
     list = cur.fetchall()
+
     cur.close()
+    db.close()
 
     return render_template('courses/list.html', list=list)
