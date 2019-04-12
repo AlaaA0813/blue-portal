@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, g
 from werkzeug.security import check_password_hash
 
 def create_app(test_config=None):
@@ -20,7 +20,7 @@ def create_app(test_config=None):
 
     @app.route('/', methods=["GET", "POST"])
     def index():
-        user_email = None
+        user = g.user
 
         if request.method == 'POST':
             email = request.form['email']
@@ -45,14 +45,29 @@ def create_app(test_config=None):
             if error is None:
                 session.clear()
                 session['user_id'] = user[0]
-                session['user_email'] = user[1]
+                g.user = user
+
+        return render_template('index.html', user=g.user)
 
 
-        return render_template('index.html', user_email=session.get('user_email'))
-
-    @app.route('/logout', methods=["GET"])
+    @app.route('/logout')
     def logout():
         session.clear()
         return redirect(url_for('index'))
+
+
+    @app.before_request
+    def load_logged_in_user():
+        user_id = session.get('user_id')
+
+        if user_id is None:
+            g.user = None
+        else:
+            con = db.get_db()
+            cur = con.cursor()
+            cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+            g.user = cur.fetchone()
+            cur.close()
+            # con.close()
 
     return app

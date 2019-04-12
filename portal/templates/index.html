@@ -3,7 +3,7 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-  {% if user_email == None %}
+  {% if user == None %}
     <form method="post">
       <label for="email">Email
         <input type="email" name="email" />
@@ -14,7 +14,7 @@
       <input type="submit" value="Login" />
     </form>
   {% else %}
-    <p>hello {{user_email}}</p>
-    <button><a href="/logout">Logout</a></button>
+    <p>hello {{user[1]}}</p>
+    <a href="/logout">Logout</a>
   {% endif %}
 {% endblock %}
