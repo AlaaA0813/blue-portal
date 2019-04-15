@@ -3,15 +3,12 @@
 {% block title %}Add Courses{% endblock %}
 
 {% block content %}
-  <form>
-    <label for="course">Course
-      <input type="text" name="course" />
+  <form method="post">
+    <label for="course_number">Course Number
+      <input type="text" name="course_number" />
     </label>
-    <label for="title">Title
-      <input type="text" name="title" />
-    </label>
-    <label for="meets">Meets
-      <input type="text" name="meets" />
+    <label for="course_title">Course Title
+      <input type="text" name="course_title" />
     </label>
     <input type="submit" value="Add Course" />
   </form>

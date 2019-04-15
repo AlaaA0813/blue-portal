@@ -38,13 +38,16 @@ def init_db():
         cur.close()
         db.commit()
 
-def add_user(email, password, role):
+def add_user(email, password, role, name):
     db = get_db()
     cur = db.cursor()
+<<<<<<< HEAD
     cur.execute('INSERT INTO users (email, password, role) VALUES (%s, %s, %s)', (email, generate_password_hash(password), role))
+=======
+    cur.execute('INSERT INTO users (email, password, role, name) VALUES (%s, %s, %s, %s)', (email, password, role, name))
+>>>>>>> Modify tables in schema.sql
     cur.close()
     db.commit()
-    db.close()
 
 
 
@@ -70,7 +73,9 @@ def add_user_command():
         password = input('> ')
         print('Role?')
         role = input('> ')
-        add_user(email, password, role)
+        print('Name?')
+        name = input('> ')
+        add_user(email, password, role, name)
         num += 1
         print('Would you like to continue?')
         answer = input('> ')
