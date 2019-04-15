@@ -3,14 +3,27 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-  <form>
-    <label for="email">Email
-      <input type="email" name="email" />
-    </label>
-    <label for="password">Password
-      <input type="password" name="password" />
-    </label>
-    <input type="submit" value="Login" />
-  </form>
+  {% if user == None %}
+    <form method="post">
+      <label for="email">Email
+        <input type="email" name="email" />
+      </label>
+      <label for="password">Password
+        <input type="password" name="password" />
+      </label>
+      <input type="submit" value="Login" />
+    </form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  {% else %}
+    <p>hello {{user[1]}}</p>
+    <a href="/logout">Logout</a>
+  {% endif %}
 {% endblock %}
-

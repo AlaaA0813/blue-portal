@@ -35,4 +35,27 @@ def client(app):
 
 @pytest.fixture
 def runner(app):
-    return app.test_cli_runner()   
+    return app.test_cli_runner()
+
+
+class AuthActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def login(self, email, password):
+        return self._client.post('/', data={'email': email, 'password': password})
+
+    def login_teacher(self):
+        return self.login('teacher@stevenscollege.edu', 'qwerty')
+
+    def login_student(self):
+        return self.login('student@stevenscollege.edu', 'asdfgh')
+
+    def logout(self):
+        return self._client.get('/logout')
+
+    
+
+@pytest.fixture
+def auth(client):
+    return AuthActions(client)
