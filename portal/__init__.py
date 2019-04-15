@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for, g
+from flask import Flask, render_template, session, request, redirect, url_for, g, flash
 from werkzeug.security import check_password_hash
 
 def create_app(test_config=None):
@@ -47,6 +47,8 @@ def create_app(test_config=None):
                 session['user_id'] = user[0]
                 g.user = user
 
+            flash(error)
+
         return render_template('index.html', user=g.user)
 
 
@@ -68,6 +70,6 @@ def create_app(test_config=None):
             cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
             g.user = cur.fetchone()
             cur.close()
-            
+
 
     return app

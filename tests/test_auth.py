@@ -25,3 +25,15 @@ def test_logout_student(client, auth):
         assert 'user_id' not in session
         assert response.status_code == 302
         assert response.headers['Location'] == 'http://localhost/'
+
+def test_login_wrong_email(client, auth):
+    with client:
+        assert client.get('/').status_code == 200
+        response = auth.login('student@email.com','student1')
+        assert b'Incorrect email.' in response.data
+
+def test_login_wrong_password(client, auth):
+    with client:
+        assert client.get('/').status_code == 200
+        response = auth.login('student@stevenscollege.edu','stud')
+        assert b'Incorrect password.' in response.data
