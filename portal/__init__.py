@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, g, flash
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -39,7 +39,7 @@ def create_app(test_config=None):
             if user is None:
                 error = 'Incorrect email.'
 
-            elif user[2] != password:
+            elif not check_password_hash(user[2], password):
                 error = 'Incorrect password.'
 
             if error is None:
