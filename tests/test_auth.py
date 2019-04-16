@@ -29,7 +29,7 @@ def test_logout_student(client, auth):
 def test_login_wrong_email(client, auth):
     with client:
         assert client.get('/').status_code == 200
-        response = auth.login('student@email.com','student1')
+        response = auth.login('test@email.com','test')
         assert b'Incorrect email.' in response.data
 
 def test_login_wrong_password(client, auth):

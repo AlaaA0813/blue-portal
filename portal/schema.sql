@@ -6,11 +6,12 @@ CREATE TABLE users (
     email text UNIQUE NOT NULL,
     password text NOT NULL,
     role varchar(7) NOT NULL CHECK (role IN ('teacher', 'student')),
-    name varchar(200) NOT NULL
+    user_name varchar(200) NOT NULL
 );
 
 CREATE TABLE courses (
-    course_number varchar(15) PRIMARY KEY,
+    course_id bigserial PRIMARY KEY,
+    course_number varchar(15) NOT NULL,
     course_title varchar(100) NOT NULL,
-    instructor integer REFERENCES users(user_id)
+    instructor_id integer REFERENCES users(user_id)
 );

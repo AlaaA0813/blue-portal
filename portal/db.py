@@ -41,11 +41,7 @@ def init_db():
 def add_user(email, password, role, name):
     db = get_db()
     cur = db.cursor()
-<<<<<<< HEAD
-    cur.execute('INSERT INTO users (email, password, role) VALUES (%s, %s, %s)', (email, generate_password_hash(password), role))
-=======
-    cur.execute('INSERT INTO users (email, password, role, name) VALUES (%s, %s, %s, %s)', (email, password, role, name))
->>>>>>> Modify tables in schema.sql
+    cur.execute('INSERT INTO users (email, password, role) VALUES (%s, %s, %s)', (email, generate_password_hash(password), role, name))
     cur.close()
     db.commit()
 

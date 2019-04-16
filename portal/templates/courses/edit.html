@@ -1,0 +1,15 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Edit Courses{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="course_number">Course Number
+      <input type="text" name="course_number" value="{{ course[1] }}" required/>
+    </label>
+    <label for="course_title">Course Title
+      <input type="text" name="course_title" value="{{ course[2] }}" required/>
+    </label>
+    <input type="submit" value="Update Course" />
+  </form>
+{% endblock %}

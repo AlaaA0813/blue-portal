@@ -54,8 +54,19 @@ class AuthActions(object):
     def logout(self):
         return self._client.get('/logout')
 
+class CourseActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def create(self, course_number, course_title):
+        return self._client.post('/courses/create', data={'course_number': course_number, 'course_title': course_title})
+
 
 
 @pytest.fixture
 def auth(client):
     return AuthActions(client)
+
+@pytest.fixture
+def course(client):
+    return CourseActions(client)
