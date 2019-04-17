@@ -70,7 +70,7 @@ def add_user_command():
         print('Role?')
         role = input('> ')
         print('Name?')
-        name = input('> ')
+        user_name = input('> ')
         add_user(email, password, role, user_name)
         num += 1
         print('Would you like to continue?')
