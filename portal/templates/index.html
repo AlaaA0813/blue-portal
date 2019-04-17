@@ -2,6 +2,19 @@
 
 {% block title %}TSCT Portal{% endblock %}
 
+{% block logout %}
+  {% if user != None %}
+    <a href="/logout" class="logout">Logout</a>
+  {% endif %}
+{% endblock %}
+
+{% block nav %}
+  {% if user[3] == 'teacher' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% if user == None %}
     <form method="post">
@@ -23,7 +36,6 @@
       {% endif %}
     {% endwith %}
   {% else %}
-    <p>hello {{user[4]}}</p>
-    <a href="/logout">Logout</a>
+    <p>Welcome {{user[4]}}!</p>
   {% endif %}
 {% endblock %}

@@ -40,12 +40,12 @@ def test_list_courses_student(client, auth):
     auth.login_student()
     assert client.get('/courses/list').status_code == 401
 
-def test_get_courses(client, course, auth, app):
+def test_edit_courses(client, course, auth, app):
     auth.login_teacher()
     course.create('test', 'testing')
 
     assert client.get('courses/1/edit').status_code == 200
-    client.post('/1/edit', data = {'course_number': 'test2', 'course_title': 'testing2'})
+    client.post('courses/1/edit', data = {'course_number': 'test2', 'course_title': 'testing2'})
 
     with app.app_context():
         con = get_db()
@@ -54,5 +54,4 @@ def test_get_courses(client, course, auth, app):
         course = cur.fetchone()
         cur.close()
 
-    print(course)
     assert course[1] == 'test2'

@@ -29,7 +29,7 @@ def create_course():
 
             return redirect(url_for('courses.list_courses'))
 
-        return render_template('courses/create.html')
+        return render_template('courses/create.html', user=user)
 
     else:
         abort(401)
@@ -48,7 +48,7 @@ def list_courses():
         cur.close()
         db.close()
 
-        return render_template('courses/list.html', list=list)
+        return render_template('courses/list.html', list=list, user=user)
 
     else:
         abort(401)
@@ -71,11 +71,9 @@ def edit_course(id):
             con.commit()
             con.close()
 
-            print('yes')
-
             return redirect(url_for('courses.list_courses'))
 
-        return render_template('courses/edit.html', course=course)
+        return render_template('courses/edit.html', course=course, user=user)
 
     else:
         abort(401)
@@ -89,8 +87,5 @@ def get_course(id):
 
     if course is None:
         abort(404)
-
-    # if check_author and course['author_id'] != g.user['id']:
-    #     abort(403)
 
     return course

@@ -2,6 +2,15 @@
 
 {% block title %}Edit Courses{% endblock %}
 
+{% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
+
+{% block nav %}
+  {% if user[3] == 'teacher' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <form method="post">
     <label for="course_number">Course Number
@@ -10,6 +19,6 @@
     <label for="course_title">Course Title
       <input type="text" name="course_title" value="{{ course[2] }}" required/>
     </label>
-    <input type="submit" value="Update Course" />
+    <input type="submit" value="Update Course" class="submit" />
   </form>
 {% endblock %}
