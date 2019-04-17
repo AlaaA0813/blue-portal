@@ -47,7 +47,7 @@ def test_add_user(runner, monkeypatch, app):
         cur = con.cursor()
         check = cur.execute("SELECT * FROM users WHERE email = 'test'")
         assert check == None
-        add_user('test', 'test', 'teacher')
+        add_user('test', 'test', 'teacher', 'test')
         check = cur.execute("SELECT * FROM users WHERE email = 'test'")
         check = cur.fetchone()
         assert check is not None

@@ -40,6 +40,10 @@ body {
   }
 }
 
+main {
+  font-size: 1.5rem;
+}
+
 
 /**
  * Forms
@@ -69,4 +73,72 @@ label input {
  h1 {
    background-color: #a6093d;
    color: #fff;
+   margin: auto 0 auto 1rem;
+   font-size: 3rem;
+ }
+
+ nav ul {
+   display: flex;
+   justify-content: space-around;
+   list-style-type: none;
+   background-color: #ccc;
+ }
+
+ a {
+   text-decoration: none;
+   color: #000;
+ }
+
+ /*
+  * BUTTONS
+  */
+
+  .logout {
+    float: right;
+    color: #fff;
+    font-family: 'Crimson Text', serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin: auto 2rem auto 0;
+    transition: 0.5s ease-in-out;
+  }
+
+  .logout:hover {
+    background-color: white;
+    color: #a6093d;
+    padding: 16px;
+    transition: 0.5s ease-in-out;
+  }
+
+  .nav-link {
+    font-size: 1.5rem;
+    padding: 0 3rem;
+  }
+
+  .nav-link:hover {
+    background-color: #bbb;
+  }
+
+ .submit, .edit {
+   background-color: #eee;
+   color: #000;
+   border: 1px solid black;
+   border-radius: 10px;
+   padding: 0 5px;
+   font-size: 1rem;
+ }
+
+ .submit {
+   background-color: #ccc;
+   padding: 5px;
+ }
+
+ /**
+ * Containers
+ */
+
+ .top-header {
+   display: flex;
+   justify-content: space-between;
+   background-color: #a6093d;
  }

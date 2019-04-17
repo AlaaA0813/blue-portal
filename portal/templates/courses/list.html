@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Course List{% endblock %}
+
+{% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
+
+{% block nav %}
+  {% if user[3] == 'teacher' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2>Your Courses</h2>
+
+    <ul>
+      {% for course in list %}
+        <li> <a href="{{ url_for('courses.edit_course', id=course[0])}}" class="edit">Edit</a> - {{ course[1] }} - {{  course[2] }}</li>
+      {% endfor %}
+    </ul>
+
+  <a href="{{ url_for('courses.create_course') }}" class="submit">Add New Course</a>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+import functools
 from flask import Flask, render_template, session, request, redirect, url_for, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -14,6 +15,9 @@ def create_app(test_config=None):
         app.config.from_pyfile('config.py', silent=True)
     else:
         app.config.from_mapping(test_config)
+
+    from . import courses
+    app.register_blueprint(courses.bp)
 
     from . import db
     db.init_app(app)
@@ -67,9 +71,18 @@ def create_app(test_config=None):
         else:
             con = db.get_db()
             cur = con.cursor()
-            cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+            cur.execute('SELECT * FROM users WHERE user_id = %s', (user_id,))
             g.user = cur.fetchone()
             cur.close()
 
-
     return app
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('index'))
+
+        return view(**kwargs)
+
+    return wrapped_view
