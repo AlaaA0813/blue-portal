@@ -19,6 +19,17 @@
   <label for="student_email">Student Email
     <input type="text" name="student_email" required />
   </label>
+  <input type="button" value="+" onclick="add_student()"></input>
   <input type="submit" value="Create Roster" class="submit" />
+
+  <script>
+    function add_student() {
+      var x = document.createElement("INPUT");
+      x.setAttribute("type", "text");
+      x.setAttribute("placeholder", "Student Email");
+      document.body.appendChild(x);
+    }
+  </script>
 </form>
+
 {% endblock %}
