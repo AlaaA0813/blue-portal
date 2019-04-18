@@ -39,11 +39,10 @@ def init_db():
         db.commit()
 
 def add_user(email, password, role, name):
-    db = get_db()
-    cur = db.cursor()
-    cur.execute('INSERT INTO users (email, password, role, name) VALUES (%s, %s, %s, %s)', (email, generate_password_hash(password), role, name))
-    cur.close()
-    db.commit()
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute('INSERT INTO users (email, password, role, name) VALUES (%s, %s, %s, %s)', (email, generate_password_hash(password), role, name))
+        con.commit()
 
 
 

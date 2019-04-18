@@ -3,8 +3,7 @@ import os
 import pytest
 
 from portal import create_app
-from portal.db import get_db, init_db
-
+from portal import db
 
 @pytest.fixture
 def app():
@@ -15,15 +14,13 @@ def app():
     })
 
     with app.app_context():
-        init_db()
+        db.init_db()
 
         with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
-            con = get_db()
-            cur = con.cursor()
-            cur.execute(f.read())
-            cur.close()
-            con.commit()
-            con.close()
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute(f.read())
+                con.commit()
 
     yield app
 
@@ -60,7 +57,6 @@ class CourseActions(object):
 
     def create(self, course_number, course_title):
         return self._client.post('/courses/create', data={'course_number': course_number, 'course_title': course_title})
-
 
 
 @pytest.fixture

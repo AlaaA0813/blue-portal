@@ -1,8 +1,7 @@
 import pytest
 
-from portal.db import get_db
+from portal import db
 from portal.courses import get_course
-
 from conftest import auth
 
 def test_create_course_teacher(client, auth, app, course):
@@ -16,12 +15,11 @@ def test_create_course_teacher(client, auth, app, course):
     #Testing POST request
     course.create('test', 'testing')
     with app.app_context():
-        con = get_db()
-        cur = con.cursor()
-        check = cur.execute("SELECT * FROM courses WHERE course_number = 'test'")
-        check = cur.fetchone()
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                check = cur.execute("SELECT * FROM courses WHERE course_number = 'test'")
+                check = cur.fetchone()
         assert check is not None
-        cur.close()
 
 def test_create_course_student(client, auth):
     assert client.get('/courses/create').status_code == 302
@@ -48,10 +46,9 @@ def test_edit_courses(client, course, auth, app):
     client.post('courses/1/edit', data = {'course_number': 'test2', 'course_title': 'testing2'})
 
     with app.app_context():
-        con = get_db()
-        cur = con.cursor()
-        cur.execute("SELECT * FROM courses WHERE course_id = 1")
-        course = cur.fetchone()
-        cur.close()
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM courses WHERE id = 1")
+                course = cur.fetchone()
 
     assert course[1] == 'test2'
