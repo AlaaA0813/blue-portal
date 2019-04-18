@@ -43,12 +43,19 @@ def list_courses():
         db = get_db()
         cur = db.cursor()
         cur.execute('SELECT * FROM courses WHERE instructor_id = %s', (user[0],))
-        list = cur.fetchall()
-
+        courses = cur.fetchall()
         cur.close()
         db.close()
 
-        return render_template('courses/list.html', list=list, user=user)
+        for each in results:
+            db = get_db()
+            cur = db.cursor()
+            cur.execute('SELECT * FROM sessions WHERE course_id = %s', (each[0],))
+            sessions = cur.fetchall()
+            cur.close()
+            db.close()
+
+        return render_template('courses/list.html', courses=courses, user=user, sessions=sessions)
 
     else:
         abort(401)
@@ -81,7 +88,7 @@ def edit_course(id):
 def get_course(id):
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT * FROM courses WHERE course_id=%s", (id,))
+    cur.execute("SELECT * FROM courses WHERE course_id = %s", (id,))
     course = cur.fetchone()
     cur.close()
 
