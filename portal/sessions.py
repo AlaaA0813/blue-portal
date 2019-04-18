@@ -1,5 +1,7 @@
 import psycopg2
 
+from portal import db
+
 bp = Blueprint('sessions', __name__, url_prefix='/sessions')
 
 @bp.route('<int:id>/create', methods=('GET', 'POST'))
@@ -30,9 +32,7 @@ def create_session(id):
                     'VALUES (%s, %s);',
                     (student[0], session[0])
                     )
-            cur.close()
-            db.commit()
-            db.close()
+                db.commit()
 
             return redirect(url_for('courses.list_courses'))
 
@@ -40,3 +40,51 @@ def create_session(id):
 
     else:
         abort(401)
+
+
+@bp.route('/<int:id>/edit', methods=('GET', 'POST'))
+@login_required
+def edit_session(id):
+    session = get_session(id)
+    user = g.user
+
+    if user[3] == 'teacher':
+        if request.method == 'POST':
+            session_time = request.form['session_time']
+            student_list =  request.form['student_list']
+
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("UPDATE sessions SET meets = %s WHERE id = %s", (session_time, session[0],))
+                con.commit()
+
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("DELETE FROM user_sessions WHERE session_id = %s", (session[0],))
+                    for each in student_list:
+                        student = cur.execute("SELECT * FROM users WHERE email = each")
+                        cur.execute(
+                            'INSERT INTO user_sessions (student_id, session_id)'
+                            'VALUES (%s, %s);',
+                            (student[0], session[0])
+                            )
+                        db.commit()
+
+            return redirect(url_for('courses.list_courses'))
+
+        return render_template('sessions/edit.html', session=session, user=user)
+
+    else:
+        abort(401)
+
+
+def get_session(id):
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT * FROM sessions WHERE id = %s", (id,))
+            session = cur.fetchone()
+
+    if sesssion is None:
+        abort(404)
+
+    return session
