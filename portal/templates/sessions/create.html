@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Add Session{% endblock %}
+
+{% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
+
+{% block nav %}
+{% if user[3] == 'teacher' %}
+<li><a href="/" class="nav-link">Home</a></li>
+<li><a href="/courses/list" class="nav-link">Course List</a></li>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <label for="session_time">Session Time
+    <input type="text" name="session_time" required />
+  </label>
+  <label for="student_email">Student Email
+    <input type="text" name="student_email" required />
+  </label>
+  <input type="button" value="+" onclick="add_student()"></input>
+  <input type="submit" value="Create Roster" class="submit" />
+
+  <script>
+    function add_student() {
+      var x = document.createElement("INPUT");
+      x.setAttribute("type", "text");
+      x.setAttribute("placeholder", "Student Email");
+      document.body.appendChild(x);
+    }
+  </script>
+</form>
+
+{% endblock %}

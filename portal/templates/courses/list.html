@@ -15,8 +15,14 @@
   <h2>Your Courses</h2>
 
     <ul>
-      {% for course in list %}
-        <li> <a href="{{ url_for('courses.edit_course', id=course[0])}}" class="edit">Edit</a> - {{ course[1] }} - {{  course[2] }}</li>
+      {% for course in courses %}
+        <li> <a href="{{ url_for('courses.edit_course', id=course[0])}}" class="edit">Edit</a> - {{ course[1] }} - {{  course[2] }}<a href="#" class="edit">Add Session</a>
+         <ul>
+            {% for session in sessions %}
+            <li>{{ course[1] – session[1] - session[3] }}<a href="{{ url_for('sessions.edit_session', id=session[0])}}" class="edit">Edit</a> </li>
+            {% endfor %}
+          </ul>
+        </li>
       {% endfor %}
     </ul>
 
