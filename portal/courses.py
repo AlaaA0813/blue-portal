@@ -48,7 +48,7 @@ def list_courses():
         for each in courses:
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute('SELECT * FROM sessions WHERE id = %s', (each[0],))
+                    cur.execute('SELECT * FROM sessions WHERE course_id = %s', (each[0],))
                     sessions = cur.fetchall()
 
         return render_template('courses/list.html', courses=courses, user=user, sessions=sessions)

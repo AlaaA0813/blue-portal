@@ -16,20 +16,23 @@
   <label for="session_time">Session Time
     <input type="text" name="session_time" required />
   </label>
-  <label for="student_email">Student Email
+  <label for="student_email" id="email-label">Student Emails
     <input type="text" name="student_email" required />
   </label>
   <input type="button" value="+" onclick="add_student()"></input>
   <input type="submit" value="Create Roster" class="submit" />
 
   <script>
-    function add_student() {
-      var x = document.createElement("INPUT");
-      x.setAttribute("type", "text");
-      x.setAttribute("placeholder", "Student Email");
-      document.body.appendChild(x);
+    const add_student = () => {
+      let input = document.createElement("INPUT");
+      let label = document.getElementById('email-label')
+      input.setAttribute("type", "text");
+      input.setAttribute("name", "student_email");
+      input.style.width = "100%";
+      label.appendChild(input);
     }
   </script>
 </form>
+
 
 {% endblock %}

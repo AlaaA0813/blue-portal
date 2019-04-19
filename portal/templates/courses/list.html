@@ -16,10 +16,10 @@
 
     <ul>
       {% for course in courses %}
-        <li> <a href="{{ url_for('courses.edit_course', id=course[0])}}" class="edit">Edit</a> - {{ course[1] }} - {{  course[2] }}<a href="#" class="edit">Add Session</a>
+        <li> <a href="{{ url_for('courses.edit_course', id=course[0])}}" class="edit">Edit</a> - {{ course[1] }} - {{  course[2] }}<a href="{{ url_for('sessions.create_session', id=course[0])}}" class="edit">Add Session</a>
          <ul>
             {% for session in sessions %}
-            <li>{{ course[1] – session[1] - session[3] }}<a href="{{ url_for('sessions.edit_session', id=session[0])}}" class="edit">Edit</a> </li>
+            <li><a href="{{ url_for('sessions.edit_session', id=session[0])}}" class="edit">Edit</a>{{course[2]}} – {{session[1]}} - {{session[3]}}</li>
             {% endfor %}
           </ul>
         </li>
