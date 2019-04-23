@@ -58,6 +58,12 @@ class CourseActions(object):
     def create(self, course_number, course_title):
         return self._client.post('/courses/create', data={'course_number': course_number, 'course_title': course_title})
 
+class AssignmentActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def create(self, assignment_name, assignment_description):
+        return self._client.post('/assignments/create', data={'assignment_name': assignment_name, 'assignment_description': assignment_description})
 
 @pytest.fixture
 def auth(client):
@@ -66,3 +72,7 @@ def auth(client):
 @pytest.fixture
 def course(client):
     return CourseActions(client)
+
+@pytest.fixture
+def assignment(client):
+    return AssignmentActions(client)

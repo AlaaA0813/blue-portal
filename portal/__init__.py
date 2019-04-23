@@ -21,6 +21,9 @@ def create_app(test_config=None):
     from . import sessions
     app.register_blueprint(sessions.bp)
 
+    from . import assignments
+    app.register_blueprint(assignments.bp)
+
     from . import db
     db.init_app(app)
 

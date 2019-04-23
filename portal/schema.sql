@@ -33,7 +33,9 @@ CREATE TABLE user_sessions (
 );
 
 CREATE TABLE assignments (
-  assignment_id bigserial PRIMARY KEY,
-  assignment_name varchar(200) NOT NULL,
-  assignment_description text NOT NULL
+    assignment_id bigserial PRIMARY KEY,
+    assignment_name varchar(200) NOT NULL,
+    assignment_description text NOT NULL,
+    instructor_id integer REFERENCES users(user_id)
+
 );
