@@ -13,8 +13,8 @@ def create_assignment():
     user = g.user
     if user[3] == 'teacher':
         if request.method == 'POST':
-            course_number = request.form['assignment_name']
-            course_title =  request.form['assignment_description']
+            assignment_name = request.form['assignment_name']
+            assignment_description =  request.form['assignment_description']
 
             db = get_db()
             cur = db.cursor()
@@ -81,7 +81,7 @@ def get_assignment(id):
     con = get_db()
     cur = con.cursor()
     cur.execute("SELECT * FROM assignments WHERE assignment_id=%s", (id,))
-    course = cur.fetchone()
+    assignment = cur.fetchone()
     cur.close()
 
     if assignment is None:
