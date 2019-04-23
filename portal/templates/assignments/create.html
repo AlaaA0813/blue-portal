@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}Add assignments{% endblock %}
+{% block title %}Add Assignments{% endblock %}
 
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
@@ -14,9 +14,9 @@
 {% block content %}
   <form method="post">
     <label for="assignment_name">Assignment Name
-      <input type="text" name="assignment_number" required/>
+      <input type="text" name="assignment_name" required/>
     </label>
-    <label for="assignment_description">assignment Description
+    <label for="assignment_description">Assignment Description
       <input type="text" name="assignment_description" required/>
     </label>
     <input type="submit" value="Add Assignment" class="submit" />
