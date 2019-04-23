@@ -4,6 +4,7 @@ from flask import Flask, render_template, flash, Blueprint, g, request, redirect
 
 from portal import db
 from portal import login_required
+import assignments
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
@@ -95,6 +96,12 @@ def edit_course(id):
 
     else:
         abort(401)
+
+@bp.route('/details', methods=('GET'))
+@login_required
+def list_details():
+    return assignments.list_assignments()
+
 
 def get_course(id):
     with db.get_db() as con:
