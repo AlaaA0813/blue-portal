@@ -18,6 +18,8 @@ def create_app(test_config=None):
 
     from . import courses
     app.register_blueprint(courses.bp)
+    from . import sessions
+    app.register_blueprint(sessions.bp)
 
     from . import db
     db.init_app(app)
@@ -30,14 +32,14 @@ def create_app(test_config=None):
             email = request.form['email']
             password = request.form['password']
 
-            con = db.get_db()
             error = None
 
-            cur = con.cursor()
-            cur.execute(
-                'SELECT * FROM users WHERE email = %s', (email,)
-            )
-            user = cur.fetchone()
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute(
+                        'SELECT * FROM users WHERE email = %s', (email,)
+                    )
+                    user = cur.fetchone()
 
 
             if user is None:
@@ -48,7 +50,7 @@ def create_app(test_config=None):
 
             if error is None:
                 session.clear()
-                session['user_id'] = user[0]
+                session['id'] = user[0]
                 g.user = user
 
             flash(error)
@@ -64,16 +66,15 @@ def create_app(test_config=None):
 
     @app.before_request
     def load_logged_in_user():
-        user_id = session.get('user_id')
+        user_id = session.get('id')
 
         if user_id is None:
             g.user = None
         else:
-            con = db.get_db()
-            cur = con.cursor()
-            cur.execute('SELECT * FROM users WHERE user_id = %s', (user_id,))
-            g.user = cur.fetchone()
-            cur.close()
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+                    g.user = cur.fetchone()
 
     return app
 

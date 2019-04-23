@@ -38,12 +38,11 @@ def init_db():
         cur.close()
         db.commit()
 
-def add_user(email, password, role, user_name):
-    db = get_db()
-    cur = db.cursor()
-    cur.execute('INSERT INTO users (email, password, role, user_name) VALUES (%s, %s, %s, %s)', (email, generate_password_hash(password), role, user_name))
-    cur.close()
-    db.commit()
+def add_user(email, password, role, name):
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute('INSERT INTO users (email, password, role, name) VALUES (%s, %s, %s, %s)', (email, generate_password_hash(password), role, name))
+        con.commit()
 
 
 
@@ -70,8 +69,8 @@ def add_user_command():
         print('Role?')
         role = input('> ')
         print('Name?')
-        user_name = input('> ')
-        add_user(email, password, role, user_name)
+        name = input('> ')
+        add_user(email, password, role, name)
         num += 1
         print('Would you like to continue?')
         answer = input('> ')
