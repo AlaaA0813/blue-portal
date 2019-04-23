@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Assignment List{% endblock %}
+
+{% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
+
+{% block nav %}
+  {% if user[3] == 'teacher' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/assignments/list" class="nav-link">Assignment List</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2>Your assignments</h2>
+
+    <ul>
+      {% for assignment in list %}
+        <li> <a href="{{ url_for('assignments.edit_assignment', id=assignment[0])}}" class="edit">Edit</a> - {{ assignment[1] }} - {{  assignment[2] }}</li>
+      {% endfor %}
+    </ul>
+
+  <a href="{{ url_for('assignments.create_assignment') }}" class="submit">Add New Assignment</a>
+
+{% endblock %}
