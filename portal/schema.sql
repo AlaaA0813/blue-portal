@@ -28,5 +28,5 @@ CREATE TABLE sessions (
 CREATE TABLE user_sessions (
   student_id integer REFERENCES users(id),
   session_id integer REFERENCES sessions(id),
-  student_email text UNIQUE NOT NULL
+  student_email text NOT NULL
 );

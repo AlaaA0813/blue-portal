@@ -18,7 +18,7 @@
   </label>
   <label for="student_email" id="email-label">Student Email
     {% for student in students %}
-      <input type="text" name="student_email" value="{{student[2]}}" required />
+      <input type="text" name="student_email" value="{{student[2]}}" />
     {% endfor %}
   </label>
   <input type="button" value="+" onclick="add_student()"></input>

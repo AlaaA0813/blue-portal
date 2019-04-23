@@ -37,7 +37,7 @@ def create_course():
 @login_required
 def list_courses():
     user = g.user
-    sessions = None
+    sessions = []
 
     if user[3] == 'teacher':
         with db.get_db() as con:
@@ -49,7 +49,7 @@ def list_courses():
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute('SELECT * FROM sessions WHERE course_id = %s', (each[0],))
-                    sessions = cur.fetchall()
+                    sessions.append(cur.fetchall())
 
         return render_template('courses/list.html', courses=courses, user=user, sessions=sessions)
 
@@ -84,8 +84,5 @@ def get_course(id):
         with con.cursor() as cur:
             cur.execute("SELECT * FROM courses WHERE id = %s", (id,))
             course = cur.fetchone()
-
-    if course is None:
-        abort(404)
 
     return course

@@ -64,7 +64,7 @@ def edit_session(id):
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("SELECT * FROM user_sessions WHERE session_id = %s", (session[0],))
-            students = cur.fetchall()
+            students_in_session = cur.fetchall()
 
     if user[3] == 'teacher':
         if request.method == 'POST':
@@ -79,19 +79,24 @@ def edit_session(id):
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("DELETE FROM user_sessions WHERE session_id = %s", (session[0],))
+                    con.commit()
                     for each in student_list:
-                        cur.execute("SELECT * FROM users WHERE email = %s", (each,))
-                        student = cur.fetchone()
-                        cur.execute(
-                            'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                            'VALUES (%s, %s, %s);',
-                            (student[0], session[0], student[1])
-                            )
-                        con.commit()
+                        cur.execute("SELECT email FROM users WHERE role = 'student'")
+                        students = cur.fetchall()
+                        for email_tuple in students:
+                            if each in email_tuple:
+                                cur.execute("SELECT * FROM users WHERE email = %s", (each,))
+                                student = cur.fetchone()
+                                cur.execute(
+                                    'INSERT INTO user_sessions (student_id, session_id, student_email)'
+                                    'VALUES (%s, %s, %s);',
+                                    (student[0], session[0], student[1])
+                                    )
+                                con.commit()
 
             return redirect(url_for('courses.list_courses'))
 
-        return render_template('sessions/edit.html', session=session, students=students, user=user)
+        return render_template('sessions/edit.html', session=session, students=students_in_session, user=user)
 
     else:
         abort(401)
