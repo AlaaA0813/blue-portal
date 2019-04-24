@@ -45,9 +45,9 @@
           </tr>
           {% for session in student_sessions %}
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{ session[0] }}</td>
+              <td>{{ session[1] }} {{ session[2] }}</td>
+              <td>{{ session[3] }}</td>
             </tr>
           {% endfor %}
         </table>

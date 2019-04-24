@@ -67,8 +67,11 @@ def list_courses():
                 '	ON s.id = us.session_id'
                 ' WHERE us.student_id = %s;', (user[0],))
                 student_sessions = cur.fetchall()
-                
+
         return render_template('courses/list.html', user=user, student_sessions=student_sessions)
+
+    else:
+        abort(401)
 
 
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))

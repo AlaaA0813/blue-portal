@@ -39,6 +39,7 @@ def test_list_courses_student(client, auth, course):
     assert client.get('/courses/list').status_code == 200
     response = client.get('/courses/list')
     assert b'Your Schedule' in response.data
+    assert b'Math A' in response.data
 
 def test_edit_courses(client, course, auth, app):
     auth.login_teacher()
