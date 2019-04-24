@@ -30,22 +30,18 @@ def test_create_session_student(client, auth):
 
 def test_edit_sessions(client, course, auth, app):
     auth.login_teacher()
-    course.create('test', 'testing')
-    client.post('/sessions/1/create', data = {'session_time': 'test time', 'student_email': ['student@stevenscollege.edu', 'student2@stevenscollege.edu', 'student3@stevenscollege.edu']})
     assert client.get('sessions/1/edit').status_code == 200
-    client.post('sessions/1/edit', data = {'session_time': 'test time2', 'student_email': ['student@stevenscollege.edu', 'student2@stevenscollege.edu', 'student3@stevenscollege.edu', 'student4@stevenscollege.edu']})
+    client.post('sessions/1/edit', data = {'session_time': 'MTWRF', 'student_email': ['student@stevenscollege.edu', 'student2@stevenscollege.edu', 'student3@stevenscollege.edu', 'student4@stevenscollege.edu']})
 
     with app.app_context():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM sessions WHERE id = 1")
                 session = cur.fetchone()
-
-        assert session[3] == 'test time2'
+        assert session[3] == 'MTWRF'
 
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute("SELECT * FROM user_sessions")
+                cur.execute("SELECT * FROM user_sessions WHERE session_id = 1")
                 students = cur.fetchall()
-                print(students)
         assert len(students) == 4

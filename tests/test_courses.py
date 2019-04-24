@@ -33,10 +33,13 @@ def test_list_courses_teacher(client, auth):
     response = client.get('/courses/list')
     assert b'Your Courses' in response.data
 
-def test_list_courses_student(client, auth):
+def test_list_courses_student(client, auth, course):
     assert client.get('/courses/list').status_code == 302
     auth.login_student()
-    assert client.get('/courses/list').status_code == 401
+    assert client.get('/courses/list').status_code == 200
+    response = client.get('/courses/list')
+    assert b'Your Schedule' in response.data
+    assert b'Math A' in response.data
 
 def test_edit_courses(client, course, auth, app):
     auth.login_teacher()
