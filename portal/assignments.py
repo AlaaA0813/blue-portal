@@ -35,28 +35,6 @@ def create_assignment():
     else:
         abort(401) # TODO: Fix this later
 
-@bp.route('/list')
-@login_required
-def list_assignments():
-    user = g.user
-
-    if user[3] == 'teacher':
-        db = get_db()
-        cur = db.cursor()
-        cur.execute('SELECT * FROM assignments')
-        list = cur.fetchall()
-
-        cur.execute('SELECT course_title FROM courses AT course_id = course.id')
-        course = cur.fetchone()
-
-        cur.close()
-        db.close()
-
-        return render_template('courses/course.html', list=list, user=user, course=course)
-
-    else:
-        abort(401) # TODO: Fix this later
-
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_required
 def edit_assignment(id):
