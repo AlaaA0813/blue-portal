@@ -44,7 +44,7 @@ def create_session(id):
                         cur.execute(
                             'INSERT INTO user_sessions (student_id, session_id, student_email)'
                             'VALUES (%s, %s, %s)',
-                            (student[0], session[0], student[1])
+                            (student[0], session[0], student[1],)
                             )
                         con.commit()
 

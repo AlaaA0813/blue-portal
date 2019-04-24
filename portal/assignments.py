@@ -5,6 +5,7 @@ from flask import Flask, render_template, flash, Blueprint, g, request, redirect
 from portal.db import get_db
 from portal import login_required
 
+
 bp = Blueprint('assignments', __name__, url_prefix='/assignments')
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -19,9 +20,9 @@ def create_assignment():
             db = get_db()
             cur = db.cursor()
             cur.execute(
-                'INSERT INTO assignments (assignment_name, assignment_description, instructor_id)'
-                'VALUES (%s, %s, %s);',
-                (assignment_name, assignment_description, user[0])
+                'INSERT INTO assignments (assignment_name, assignment_description)'
+                'VALUES (%s, %s);',
+                (assignment_name, assignment_description)
                 )
             cur.close()
             db.commit()
@@ -42,13 +43,16 @@ def list_assignments():
     if user[3] == 'teacher':
         db = get_db()
         cur = db.cursor()
-        cur.execute('SELECT * FROM assignments WHERE instructor_id = %s', (user[0],))
+        cur.execute('SELECT * FROM assignments')
         list = cur.fetchall()
+
+        cur.execute('SELECT course_title FROM courses AT course_id = course.id')
+        course = cur.fetchone()
 
         cur.close()
         db.close()
 
-        return render_template('assignments/list.html', list=list, user=user)
+        return render_template('courses/course.html', list=list, user=user, course=course)
 
     else:
         abort(401) # TODO: Fix this later
@@ -65,7 +69,7 @@ def edit_assignment(id):
 
             con = get_db()
             cur = con.cursor()
-            cur.execute("UPDATE assignments SET assignment_name = %s, assignment_description = %s WHERE assignment_id = %s", (assignment_name, assignment_description, id,))
+            cur.execute("UPDATE assignments SET assignment_name = %s, assignment_description = %s WHERE id = %s", (assignment_name, assignment_description, id,))
             cur.close()
             con.commit()
             con.close()
@@ -80,7 +84,7 @@ def edit_assignment(id):
 def get_assignment(id):
     con = get_db()
     cur = con.cursor()
-    cur.execute("SELECT * FROM assignments WHERE assignment_id=%s", (id,))
+    cur.execute("SELECT * FROM assignments WHERE id = %s", (id,))
     assignment = cur.fetchone()
     cur.close()
 

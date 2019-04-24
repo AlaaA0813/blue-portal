@@ -1,6 +1,7 @@
 import pytest
 
 from portal.db import get_db
+from portal import db
 from portal.assignments import get_assignment
 
 from conftest import auth
@@ -50,8 +51,14 @@ def test_edit_assignments(client, assignment, auth, app):
     with app.app_context():
         con = get_db()
         cur = con.cursor()
-        cur.execute("SELECT * FROM assignments WHERE assignment_id = 1")
+        cur.execute("SELECT * FROM assignments WHERE id = 1")
         assignment = cur.fetchone()
         cur.close()
 
     assert assignment[1] == 'test2'
+
+def test_list_course_assignments_teacher(client, auth):
+    auth.login_teacher()
+    assert client.get('courses/1/course').status_code == 200
+    response = client.get('courses/1/course')
+    assert b'Your Assignments' in response.data

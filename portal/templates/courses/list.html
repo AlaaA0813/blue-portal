@@ -33,7 +33,8 @@
         {% endfor %}
       </ul>
 
-    <a href="{{ url_for('courses.create_course') }}" class="submit">Add New Course</a>
+  <a href="{{ url_for('courses.create_course') }}" class="submit">Add New Course</a>
+  <a href="{{ url_for('assignments.create_assignment') }}" class="submit">Assignments</a>
 
   {% elif user[3] == 'student' %}
     <h2>Your Schedule</h2>
