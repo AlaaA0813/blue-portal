@@ -38,13 +38,10 @@ def test_edit_sessions(client, course, auth, app):
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM sessions WHERE id = 1")
                 session = cur.fetchone()
-                print(session)
-
         assert session[3] == 'MTWRF'
 
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM user_sessions WHERE session_id = 1")
                 students = cur.fetchall()
-                print(students)
         assert len(students) == 4

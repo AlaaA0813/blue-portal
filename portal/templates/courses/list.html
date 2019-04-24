@@ -8,13 +8,15 @@
   {% if user[3] == 'teacher' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% elif user[3] == 'student' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
   {% if user[3] == 'teacher' %}
     <h2>Your Courses</h2>
-
       <ul>
         {% for course in courses %}
           <li> <a href="{{ url_for('courses.edit_course', id=course[0])}}" class="edit">Edit</a> - {{ course[1] }} - {{  course[2] }}<a href="{{ url_for('sessions.create_session', id=course[0])}}" class="edit">Add Session</a>
@@ -35,8 +37,6 @@
 
   {% elif user[3] == 'student' %}
     <h2>Your Schedule</h2>
-
-
         <table>
           <tr>
             <th>Course Number</th>
@@ -51,11 +51,5 @@
             </tr>
           {% endfor %}
         </table>
-
-
-
-
-
   {% endif %}
-
 {% endblock %}

@@ -3,14 +3,21 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block logout %}
-  {% if user != None %}
+  {% if user %}
     <a href="/logout" class="logout">Logout</a>
   {% endif %}
 {% endblock %}
 
 {% block nav %}
-  <li><a href="/" class="nav-link">Home</a></li>
-  <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% if user %}
+    {% if user[3] == 'teacher' %}
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/courses/list" class="nav-link">Course List</a></li>
+    {% elif user[3] == 'student' %}
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
+    {% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
