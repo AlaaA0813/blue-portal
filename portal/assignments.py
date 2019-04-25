@@ -32,7 +32,7 @@ def create_assignment(id):
         return render_template('assignments/create.html', user=user)
 
     else:
-        abort(401) # TODO: Fix this later
+        abort(401)
 
 @bp.route('/edit/<int:id>', methods=('GET', 'POST'))
 @login_required
@@ -55,7 +55,7 @@ def edit_assignment(id):
         return render_template('assignments/edit.html', assignment=assignment, user=user)
 
     else:
-        abort(401) # TODO: Fix this later
+        abort(401)
 
 def get_assignment(id):
     with db.get_db() as con:
@@ -64,6 +64,6 @@ def get_assignment(id):
             assignment = cur.fetchone()
 
     if assignment is None:
-        abort(404) # TODO: Fix this later
+        abort(404)
 
     return assignment

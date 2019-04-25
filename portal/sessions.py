@@ -46,9 +46,10 @@ def create_session(id):
                             'VALUES (%s, %s, %s)',
                             (student[0], session[0], student[1],)
                             )
-                        con.commit()
+                    cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
+                    course = cur.fetchone()
 
-            return redirect(url_for('courses.list_courses'))
+                    return redirect(url_for('courses.course', id=course[0]))
 
         return render_template('sessions/create.html', user=user)
 
@@ -92,9 +93,10 @@ def edit_session(id):
                                     'VALUES (%s, %s, %s);',
                                     (student[0], session[0], student[1])
                                     )
-                                con.commit()
+                    cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
+                    course = cur.fetchone()
 
-            return redirect(url_for('courses.list_courses'))
+            return redirect(url_for('courses.course', id=course[0]))
 
         return render_template('sessions/edit.html', session=session, students=students_in_session, user=user)
 

@@ -107,8 +107,10 @@ def course(id):
             with con.cursor() as cur:
                 cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course[0],))
                 assignments = cur.fetchall()
+                cur.execute('SELECT * FROM sessions WHERE course_id = %s', (course[0],))
+                sessions = cur.fetchall()
 
-        return render_template('courses/course.html', assignments=assignments, user=user, course=course)
+        return render_template('courses/course.html', assignments=assignments, user=user, course=course, sessions=sessions)
 
     else:
         abort(401)
