@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS user_sessions CASCADE;
 DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS courses;
@@ -29,4 +30,11 @@ CREATE TABLE user_sessions (
   student_id integer REFERENCES users(id),
   session_id integer REFERENCES sessions(id),
   student_email text NOT NULL
+);
+
+CREATE TABLE assignments (
+    id bigserial PRIMARY KEY,
+    assignment_name varchar(200) NOT NULL,
+    assignment_description text NOT NULL,
+    course_id integer REFERENCES courses(id)
 );

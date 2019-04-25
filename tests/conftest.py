@@ -58,7 +58,6 @@ class CourseActions(object):
     def create(self, course_number, course_title):
         return self._client.post('/courses/create', data={'course_number': course_number, 'course_title': course_title})
 
-
 @pytest.fixture
 def auth(client):
     return AuthActions(client)

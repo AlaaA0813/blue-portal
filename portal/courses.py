@@ -96,6 +96,26 @@ def edit_course(id):
     else:
         abort(401)
 
+@bp.route('/<int:id>/course')
+@login_required
+def course(id):
+    course = get_course(id)
+    user = g.user
+
+    if user[3] == 'teacher':
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course[0],))
+                assignments = cur.fetchall()
+                cur.execute('SELECT * FROM sessions WHERE course_id = %s', (course[0],))
+                sessions = cur.fetchall()
+
+        return render_template('courses/course.html', assignments=assignments, user=user, course=course, sessions=sessions)
+
+    else:
+        abort(401)
+
+
 def get_course(id):
     with db.get_db() as con:
         with con.cursor() as cur:
