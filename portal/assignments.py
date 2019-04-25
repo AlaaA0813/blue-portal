@@ -63,10 +63,12 @@ def assignment(id):
     if user:
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM assignments WHERE assignment_id = %s', (assignment[0],))
-                assignments = cur.fetchall()
+                cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment[0],))
+                assignment = cur.fetchone()
+                cur.execute("SELECT course_id FROM assignments WHERE id= %s", (id,))
+                course = cur.fetchone()
 
-        return render_template('courses/course.html', assignments=assignments, user=user)
+        return render_template('assignments/list.html', assignment=assignment, user=user, course=course)
 
     else:
         abort(401)
