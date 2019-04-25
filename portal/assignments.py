@@ -2,40 +2,39 @@ import psycopg2
 
 from flask import Flask, render_template, flash, Blueprint, g, request, redirect, url_for, abort
 
-from portal.db import get_db
+from portal import db
 from portal import login_required
+from portal.courses import get_course
 
 
 bp = Blueprint('assignments', __name__, url_prefix='/assignments')
 
-@bp.route('/create', methods=('GET', 'POST'))
+@bp.route('/<int:id>/create', methods=('GET', 'POST'))
 @login_required
-def create_assignment():
+def create_assignment(id):
+    course = get_course(id)
     user = g.user
     if user[3] == 'teacher':
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
 
-            db = get_db()
-            cur = db.cursor()
-            cur.execute(
-                'INSERT INTO assignments (assignment_name, assignment_description)'
-                'VALUES (%s, %s);',
-                (assignment_name, assignment_description)
-                )
-            cur.close()
-            db.commit()
-            db.close()
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute(
+                        'INSERT INTO assignments (assignment_name, assignment_description, course_id)'
+                        'VALUES (%s, %s, %s);',
+                        (assignment_name, assignment_description, course[0])
+                        )
 
-            return redirect(url_for('assignments.list_assignments'))
+            return redirect(url_for('courses.course', id=course[0]))
 
         return render_template('assignments/create.html', user=user)
 
     else:
         abort(401) # TODO: Fix this later
 
-@bp.route('/<int:id>/edit', methods=('GET', 'POST'))
+@bp.route('/edit/<int:id>', methods=('GET', 'POST'))
 @login_required
 def edit_assignment(id):
     assignment = get_assignment(id)
@@ -45,14 +44,13 @@ def edit_assignment(id):
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
 
-            con = get_db()
-            cur = con.cursor()
-            cur.execute("UPDATE assignments SET assignment_name = %s, assignment_description = %s WHERE id = %s", (assignment_name, assignment_description, id,))
-            cur.close()
-            con.commit()
-            con.close()
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("UPDATE assignments SET assignment_name = %s, assignment_description = %s WHERE id = %s", (assignment_name, assignment_description, id,))
+                    cur.execute("SELECT course_id FROM assignments WHERE id= %s", (id,))
+                    course = cur.fetchone()
 
-            return redirect(url_for('assignments.list_assignments'))
+            return redirect(url_for('courses.course', id=course[0]))
 
         return render_template('assignments/edit.html', assignment=assignment, user=user)
 
@@ -60,11 +58,10 @@ def edit_assignment(id):
         abort(401) # TODO: Fix this later
 
 def get_assignment(id):
-    con = get_db()
-    cur = con.cursor()
-    cur.execute("SELECT * FROM assignments WHERE id = %s", (id,))
-    assignment = cur.fetchone()
-    cur.close()
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT * FROM assignments WHERE id = %s", (id,))
+            assignment = cur.fetchone()
 
     if assignment is None:
         abort(404) # TODO: Fix this later

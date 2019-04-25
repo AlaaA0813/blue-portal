@@ -20,7 +20,6 @@ def create_app(test_config=None):
     app.register_blueprint(courses.bp)
     from . import sessions
     app.register_blueprint(sessions.bp)
-
     from . import assignments
     app.register_blueprint(assignments.bp)
 

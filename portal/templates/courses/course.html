@@ -1,13 +1,13 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}Course{% endblock %}
+{% block title %}{{course[1] }} {{course[2]}}{% endblock %}
 
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
 {% block nav %}
   {% if user[3] == 'teacher' %}
     <li><a href="/" class="nav-link">Home</a></li>
-    <li><a href="/assignments/course" class="nav-link">Assignment List</a></li>
+    <li><a href="/courses/list" class="nav-link">Course List</a></li>
   {% endif %}
 {% endblock %}
 
@@ -15,11 +15,11 @@
   <h2>Your Assignments</h2>
 
     <ul>
-      {% for assignment in list %}
-        <li> <a href="{{ url_for('assignments.edit_assignment', id=assignment[0])}}" class="edit">Edit</a> - {{ assignment[1] }} - {{  assignment[2] }}</li>
+      {% for assignment in assignments %}
+        <li> <a href={{ url_for('assignments.edit_assignment', id=assignment[0])}} class="edit">Edit</a> - {{ assignment[1] }} - {{  assignment[2] }}</li>
       {% endfor %}
     </ul>
 
-  <a href="{{ url_for('assignments.create_assignment') }}" class="submit">Add New Assignment</a>
+  <a href={{ url_for('assignments.create_assignment', id=course[0]) }} class="submit">Add New Assignment</a>
 
 {% endblock %}

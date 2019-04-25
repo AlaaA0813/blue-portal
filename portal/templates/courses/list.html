@@ -19,11 +19,11 @@
     <h2>Your Courses</h2>
       <ul>
         {% for course in courses %}
-          <li><a href="{{ url_for('courses.course', id=course[0]) }}">{{ course[1] }} - {{  course[2] }}</a></li>
+          <li><a href={{ url_for('courses.course', id=course[0]) }}>{{ course[1] }} - {{  course[2] }}</a></li>
         {% endfor %}
       </ul>
 
-  <a href="{{ url_for('courses.create_course') }}" class="submit">Add New Course</a>
+  <a href={{ url_for('courses.create_course') }} class="submit">Add New Course</a>
 
   {% elif user[3] == 'student' %}
     <h2>Your Schedule</h2>
