@@ -8,29 +8,50 @@
   {% if g.user[3] == 'teacher' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% elif user[3] == 'student' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
   {% endif %}
 {% endblock %}
 
 
 {% block content %}
-  <h2>Your Sessions</h2>
+  {% if user[3] == 'teacher' %}
+    <h2>Your Sessions</h2>
+        <ul>
+          {% for session in sessions %}
+            <li><a href={{ url_for('sessions.edit_session', id=session[0]) }} class="edit">Edit</a> - {{ course[1] }} {{ session[1] }} - {{ session[3] }}</li>
+          {% endfor %}
+        </ul>
+
+      <a href={{ url_for('sessions.create_session', id=course[0]) }} class="submit">Add New Session</a>
+
+
+    <h2>Your Assignments</h2>
+
       <ul>
-        {% for session in sessions %}
-          <li><a href={{ url_for('sessions.edit_session', id=session[0]) }} class="edit">Edit</a> - {{ course[1] }} {{ session[1] }} - {{ session[3] }}</li>
+        {% for assignment in assignments %}
+          <li> <a href={{ url_for('assignments.edit_assignment', id=assignment[0]) }} class="edit">Edit</a> - <a href={{ url_for('#####')}}>{{ assignment[1] }}</a></li>
         {% endfor %}
       </ul>
 
-    <a href={{ url_for('sessions.create_session', id=course[0]) }} class="submit">Add New Session</a>
+    <a href={{ url_for('assignments.create_assignment', id=course[0]) }} class="submit">Add New Assignment</a>
+
+  {% elif user[3] == 'student' %}
+    <h2>Your Assignments</h2>
+
+      <ul>
+        {% for assignment in assignments %}
+          <li><a href={{ url_for('#######')}}>{{ assignment[1] }}</a></li>
+        {% endfor %}
+      </ul>
 
 
-  <h2>Your Assignments</h2>
 
-    <ul>
-      {% for assignment in assignments %}
-        <li> <a href={{ url_for('assignments.edit_assignment', id=assignment[0]) }} class="edit">Edit</a> - {{ assignment[1] }} - {{  assignment[2] }}</li>
-      {% endfor %}
-    </ul>
 
-  <a href={{ url_for('assignments.create_assignment', id=course[0]) }} class="submit">Add New Assignment</a>
+
+
+  {% endif %}
+
 
 {% endblock %}
