@@ -3,17 +3,17 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block logout %}
-  {% if user %}
+  {% if g.user %}
     <a href="/logout" class="logout">Logout</a>
   {% endif %}
 {% endblock %}
 
 {% block nav %}
-  {% if user %}
-    {% if user[3] == 'teacher' %}
+  {% if g.user %}
+    {% if g.user[3] == 'teacher' %}
       <li><a href="/" class="nav-link">Home</a></li>
       <li><a href="/courses/list" class="nav-link">Course List</a></li>
-    {% elif user[3] == 'student' %}
+    {% elif g.user[3] == 'student' %}
       <li><a href="/" class="nav-link">Home</a></li>
       <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
     {% endif %}
@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block content %}
-  {% if user == None %}
+  {% if g.user == None %}
     <form method="post">
       <label for="email">Email
         <input type="email" name="email" />
@@ -41,6 +41,6 @@
       {% endif %}
     {% endwith %}
   {% else %}
-    <p>Welcome {{user[4]}}!</p>
+    <p>Welcome {{g.user[4]}}!</p>
   {% endif %}
 {% endblock %}

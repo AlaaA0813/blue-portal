@@ -28,8 +28,6 @@ def create_app(test_config=None):
 
     @app.route('/', methods=["GET", "POST"])
     def index():
-        user = g.user
-
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
@@ -57,7 +55,7 @@ def create_app(test_config=None):
 
             flash(error)
 
-        return render_template('index.html', user=g.user)
+        return render_template('index.html')
 
 
     @app.route('/logout')

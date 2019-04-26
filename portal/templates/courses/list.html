@@ -5,17 +5,17 @@
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
 {% block nav %}
-  {% if user[3] == 'teacher' %}
+  {% if g.user[3] == 'teacher' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Course List</a></li>
-  {% elif user[3] == 'student' %}
+  {% elif g.user[3] == 'student' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% if user[3] == 'teacher' %}
+  {% if g.user[3] == 'teacher' %}
     <h2>Your Courses</h2>
       <ul>
         {% for course in courses %}
@@ -25,7 +25,7 @@
 
   <a href={{ url_for('courses.create_course') }} class="submit">Add New Course</a>
 
-  {% elif user[3] == 'student' %}
+  {% elif g.user[3] == 'student' %}
     <h2>Your Schedule</h2>
         <table>
           <tr>

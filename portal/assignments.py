@@ -2,8 +2,7 @@ import psycopg2
 
 from flask import Flask, render_template, flash, Blueprint, g, request, redirect, url_for, abort
 
-from portal import db
-from portal import login_required
+from portal import db, login_required
 from portal.courses import get_course
 
 
@@ -13,8 +12,7 @@ bp = Blueprint('assignments', __name__, url_prefix='/assignments')
 @login_required
 def create_assignment(id):
     course = get_course(id)
-    user = g.user
-    if user[3] == 'teacher':
+    if g.user[3] == 'teacher':
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
@@ -29,7 +27,7 @@ def create_assignment(id):
 
             return redirect(url_for('courses.course', id=course[0]))
 
-        return render_template('assignments/create.html', user=user)
+        return render_template('assignments/create.html')
 
     else:
         abort(401)
@@ -38,8 +36,7 @@ def create_assignment(id):
 @login_required
 def edit_assignment(id):
     assignment = get_assignment(id)
-    user = g.user
-    if user[3] == 'teacher':
+    if g.user[3] == 'teacher':
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
@@ -52,7 +49,7 @@ def edit_assignment(id):
 
             return redirect(url_for('courses.course', id=course[0]))
 
-        return render_template('assignments/edit.html', assignment=assignment, user=user)
+        return render_template('assignments/edit.html', assignment=assignment)
 
     else:
         abort(401)
