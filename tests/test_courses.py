@@ -57,7 +57,6 @@ def test_edit_course_student(client, auth):
     auth.login_student()
     assert client.get('courses/1/edit').status_code == 401
 
-
 def test_show_course_teacher(client, auth):
     auth.login_teacher()
     assert client.get('courses/1/course').status_code == 200
@@ -69,7 +68,6 @@ def test_show_course_student(client, auth):
     assert client.get('courses/1/course').status_code == 200
     response = client.get('courses/1/course')
     assert b'<h1>1 Math</h1>' in response.data
-
 
 def test_show_course_anonymous(client, auth):
     assert client.get('courses/1/course').status_code == 302
