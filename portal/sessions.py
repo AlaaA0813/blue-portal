@@ -2,9 +2,8 @@ import psycopg2
 
 from flask import Flask, render_template, flash, Blueprint, g, request, redirect, url_for, abort
 
-from portal import db
+from portal import db, courses
 from . import login_required
-from portal import courses
 
 bp = Blueprint('sessions', __name__, url_prefix='/sessions')
 

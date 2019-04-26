@@ -2,8 +2,7 @@ import psycopg2
 
 from flask import Flask, render_template, flash, Blueprint, g, request, redirect, url_for, abort
 
-from portal import db
-from portal import login_required
+from portal import db, login_required
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
@@ -57,15 +56,16 @@ def list_courses():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute(
-                'SELECT c.course_number,'
-                '	    c.course_title,'
-                '	    s.letter,'
-                '	    s.meets'
-                ' FROM sessions AS s JOIN courses AS c'
-                '	ON s.course_id = c.id'
-                ' JOIN user_sessions AS us'
-                '	ON s.id = us.session_id'
-                ' WHERE us.student_id = %s;', (user[0],))
+                    """SELECT c.course_number,
+                    	    c.course_title,
+                    	    s.letter,
+                    	    s.meets
+                    FROM sessions AS s
+                    JOIN courses AS c ON s.course_id = c.id
+                    JOIN user_sessions AS us ON s.id = us.session_id
+                    WHERE us.student_id = %s""",
+                    (user[0],)
+                )
                 student_sessions = cur.fetchall()
 
         return render_template('courses/list.html', user=user, student_sessions=student_sessions)
