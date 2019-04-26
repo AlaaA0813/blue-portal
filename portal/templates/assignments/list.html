@@ -5,7 +5,7 @@
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
 {% block nav %}
-  {% if user[3] == 'student' %}
+  {% if g.user[3] == 'student' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
   {% endif %}
@@ -14,7 +14,7 @@
 
 {% block content %}
 
-  {% if user[3] == 'student' %}
+  {% if g.user[3] == 'student' %}
   <h2>{{ assignment[1] }}</h2>
 
   <p>{{ assignment[2] }}</p>

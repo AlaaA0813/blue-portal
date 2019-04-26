@@ -58,9 +58,8 @@ def edit_assignment(id):
 @login_required
 def assignment(id):
     assignment = get_assignment(id)
-    user = g.user
 
-    if user[3] == 'student':
+    if g.user[3] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment[0],))
@@ -68,7 +67,7 @@ def assignment(id):
                 cur.execute("SELECT course_id FROM assignments WHERE id= %s", (id,))
                 course = cur.fetchone()
 
-        return render_template('assignments/list.html', assignment=assignment, user=user, course=course)
+        return render_template('assignments/list.html', assignment=assignment, course=course)
 
     else:
         abort(401)
