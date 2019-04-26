@@ -34,11 +34,17 @@
             <th>Meets</th>
           </tr>
           {% for session in student_sessions %}
-            <tr>
-              <td>{{ session[0] }}</td>
-              <td>{{ session[1] }} {{ session[2] }}</td>
-              <td>{{ session[3] }}</td>
-            </tr>
+
+              <tr>
+                <td>{{ session[0] }}</td>
+                <td>
+                  <a href={{ url_for('courses.course', id=session[4]) }}>
+                    {{ session[1] }} {{ session[2] }}
+                  </a>
+                </td>
+                <td>{{ session[3] }}</td>
+              </tr>
+
           {% endfor %}
         </table>
   {% endif %}
