@@ -104,22 +104,17 @@ def course(id):
                 assignments = cur.fetchall()
                 cur.execute('SELECT * FROM sessions WHERE course_id = %s', (course[0],))
                 sessions = cur.fetchall()
-        return render_template('courses/course.html', assignments=assignments, user=user, course=course, sessions=sessions)
+        return render_template('courses/course.html', assignments=assignments, course=course, sessions=sessions)
 
-    elif user[3] == 'student':
+    elif g.user[3] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course[0],))
                 assignments = cur.fetchall()
-        return render_template('courses/course.html', assignments=assignments, user=user, course=course)
+
+        return render_template('courses/course.html', assignments=assignments, course=course)
 
 
-
-<<<<<<< HEAD
-        return render_template('courses/course.html', assignments=assignments, course=course, sessions=sessions)
-
-=======
->>>>>>> Refactor courses.py
     else:
         abort(401)
 
