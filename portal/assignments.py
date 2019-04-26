@@ -54,6 +54,24 @@ def edit_assignment(id):
     else:
         abort(401)
 
+@bp.route('/<int:id>/assignment')
+@login_required
+def assignment(id):
+    assignment = get_assignment(id)
+
+    if g.user[3] == 'student':
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment[0],))
+                assignment = cur.fetchone()
+                cur.execute("SELECT course_id FROM assignments WHERE id= %s", (id,))
+                course = cur.fetchone()
+
+        return render_template('assignments/list.html', assignment=assignment, course=course)
+
+    else:
+        abort(401)
+
 def get_assignment(id):
     with db.get_db() as con:
         with con.cursor() as cur:

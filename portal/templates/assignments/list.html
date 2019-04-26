@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ course[1] }} {{ course[2] }}{% endblock %}
+
+{% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
+
+{% block nav %}
+  {% if g.user[3] == 'student' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+  {% if g.user[3] == 'student' %}
+  <h2>{{ assignment[1] }}</h2>
+
+  <p>{{ assignment[2] }}</p>
+
+  {% endif %}
+{% endblock %}

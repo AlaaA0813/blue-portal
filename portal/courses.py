@@ -57,7 +57,8 @@ def list_courses():
                     """SELECT c.course_number,
                     	    c.course_title,
                     	    s.letter,
-                    	    s.meets
+                    	    s.meets,
+                            c.id
                     FROM sessions AS s
                     JOIN courses AS c ON s.course_id = c.id
                     JOIN user_sessions AS us ON s.id = us.session_id
@@ -70,7 +71,6 @@ def list_courses():
 
     else:
         abort(401)
-
 
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_required
@@ -104,12 +104,19 @@ def course(id):
                 assignments = cur.fetchall()
                 cur.execute('SELECT * FROM sessions WHERE course_id = %s', (course[0],))
                 sessions = cur.fetchall()
-
         return render_template('courses/course.html', assignments=assignments, course=course, sessions=sessions)
+
+    elif g.user[3] == 'student':
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course[0],))
+                assignments = cur.fetchall()
+
+        return render_template('courses/course.html', assignments=assignments, course=course)
+
 
     else:
         abort(401)
-
 
 def get_course(id):
     with db.get_db() as con:

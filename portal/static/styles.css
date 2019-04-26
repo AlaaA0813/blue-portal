@@ -121,7 +121,14 @@ li {
  /*
   * BUTTONS
   */
+  .text-link {
+    color: #a6093d;
+    text-decoration: underline;
+  }
 
+  .text-link:hover{
+    color: #d2849e;
+  }
   .logout {
     float: right;
     color: #fff;

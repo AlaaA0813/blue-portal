@@ -41,17 +41,35 @@ def test_list_courses_student(client, auth, course):
     assert b'Your Schedule' in response.data
     assert b'Math A' in response.data
 
-def test_edit_courses(client, course, auth, app):
+def test_edit_course_teacher(client, course, auth, app):
     auth.login_teacher()
     course.create('test', 'testing')
-
     assert client.get('courses/1/edit').status_code == 200
     client.post('courses/1/edit', data = {'course_number': 'test2', 'course_title': 'testing2'})
-
     with app.app_context():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM courses WHERE id = 1")
                 course = cur.fetchone()
-
     assert course[1] == 'test2'
+
+def test_edit_course_student(client, auth):
+    auth.login_student()
+    assert client.get('courses/1/edit').status_code == 401
+
+
+def test_show_course_teacher(client, auth):
+    auth.login_teacher()
+    assert client.get('courses/1/course').status_code == 200
+    response = client.get('courses/1/course')
+    assert b'Your Assignments' in response.data
+
+def test_show_course_student(client, auth):
+    auth.login_student()
+    assert client.get('courses/1/course').status_code == 200
+    response = client.get('courses/1/course')
+    assert b'<h1>1 Math</h1>' in response.data
+
+
+def test_show_course_anonymous(client, auth):
+    assert client.get('courses/1/course').status_code == 302
