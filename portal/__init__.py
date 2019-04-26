@@ -77,7 +77,7 @@ def create_app(test_config=None):
                     g.user = cur.fetchone()
 
     @app.errorhandler(401)
-    def unathorized(error):
+    def unauthorized(error):
         return render_template('errors/unauthorized.html'), 401
 
     @app.errorhandler(404)
