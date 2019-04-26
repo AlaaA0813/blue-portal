@@ -28,8 +28,6 @@ def create_app(test_config=None):
 
     @app.route('/', methods=["GET", "POST"])
     def index():
-        user = g.user
-
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']

@@ -11,9 +11,8 @@ bp = Blueprint('sessions', __name__, url_prefix='/sessions')
 @login_required
 def create_session(id):
     course = courses.get_course(id)
-    user = g.user
 
-    if user[3] == 'teacher':
+    if g.user[3] == 'teacher':
         if request.method == 'POST':
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -50,7 +49,7 @@ def create_session(id):
 
                     return redirect(url_for('courses.course', id=course[0]))
 
-        return render_template('sessions/create.html', user=user)
+        return render_template('sessions/create.html')
 
     else:
         abort(401)
@@ -60,13 +59,12 @@ def create_session(id):
 @login_required
 def edit_session(id):
     session = get_session(id)
-    user = g.user
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("SELECT * FROM user_sessions WHERE session_id = %s", (session[0],))
             students_in_session = cur.fetchall()
 
-    if user[3] == 'teacher':
+    if g.user[3] == 'teacher':
         if request.method == 'POST':
             session_time = request.form['session_time']
             student_list =  request.form.getlist('student_email')
@@ -97,7 +95,7 @@ def edit_session(id):
 
             return redirect(url_for('courses.course', id=course[0]))
 
-        return render_template('sessions/edit.html', session=session, students=students_in_session, user=user)
+        return render_template('sessions/edit.html', session=session, students=students_in_session)
 
     else:
         abort(401)
