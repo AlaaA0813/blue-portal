@@ -60,7 +60,7 @@ def assignment(id):
     assignment = get_assignment(id)
     user = g.user
 
-    if user:
+    if user[3] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment[0],))

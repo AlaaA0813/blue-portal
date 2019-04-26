@@ -19,7 +19,7 @@
     <h2>Your Courses</h2>
       <ul>
         {% for course in courses %}
-          <li><a href={{ url_for('courses.course', id=course[0]) }}>{{ course[1] }} - {{  course[2] }}</a></li>
+          <li><a href={{ url_for('courses.course', id=course[0]) }} class="text-link">{{ course[1] }} - {{  course[2] }}</a></li>
         {% endfor %}
       </ul>
 
@@ -38,7 +38,7 @@
               <tr>
                 <td>{{ session[0] }}</td>
                 <td>
-                  <a href={{ url_for('courses.course', id=session[4]) }}>
+                  <a href={{ url_for('courses.course', id=session[4]) }} class="text-link">
                     {{ session[1] }} {{ session[2] }}
                   </a>
                 </td>
