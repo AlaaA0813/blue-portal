@@ -46,8 +46,12 @@ def test_edit_assignments(client, auth, app):
 
     assert assignment[1] == 'test2'
 
-def test_list_course_assignments_teacher(client, auth):
+def test_show_assignment_student(client, auth):
+    auth.login_student()
+    assert client.get('assignments/1/assignment').status_code == 200
+    response = client.get('assignments/1/assignment')
+    assert b'<h2>Math Homework</h2>' in response.data
+
+def test_show_assignment_teacher(client, auth):
     auth.login_teacher()
-    assert client.get('courses/1/course').status_code == 200
-    response = client.get('courses/1/course')
-    assert b'Your Assignments' in response.data
+    assert client.get('assignments/1/assignment').status_code == 401

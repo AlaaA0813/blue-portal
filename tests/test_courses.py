@@ -55,3 +55,16 @@ def test_edit_courses(client, course, auth, app):
                 course = cur.fetchone()
 
     assert course[1] == 'test2'
+
+
+def test_list_course_teacher(client, auth):
+    auth.login_teacher()
+    assert client.get('courses/1/course').status_code == 200
+    response = client.get('courses/1/course')
+    assert b'Your Assignments' in response.data
+
+def test_list_course_student(client, auth):
+    auth.login_student()
+    assert client.get('courses/1/course').status_code == 200
+    response = client.get('courses/1/course')
+    assert b'<h1>1 Math</h1>' in response.data
