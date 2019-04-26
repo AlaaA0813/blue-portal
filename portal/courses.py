@@ -72,7 +72,6 @@ def list_courses():
     else:
         abort(401)
 
-
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_required
 def edit_course(id):
@@ -118,15 +117,11 @@ def course(id):
 
 <<<<<<< HEAD
         return render_template('courses/course.html', assignments=assignments, course=course, sessions=sessions)
+
 =======
-    # TODO: ADD STUDENT OPTION TO SEE COURSE'S Assignments
-
->>>>>>> Finish ability to connect to url
-
+>>>>>>> Refactor courses.py
     else:
         abort(401)
-
-
 
 def get_course(id):
     with db.get_db() as con:
