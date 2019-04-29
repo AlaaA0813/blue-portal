@@ -66,26 +66,26 @@ def edit_session(id):
         if request.method == 'POST':
             session_time = request.form['session_time']
             student_list =  request.form.getlist('student_email')
+            user_students = []
 
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("UPDATE sessions SET meets = %s WHERE id = %s", (session_time, session['id'],))
-
-            with db.get_db() as con:
-                with con.cursor() as cur:
                     cur.execute("DELETE FROM user_sessions WHERE session_id = %s", (session['id'],))
+                    cur.execute("SELECT email FROM users WHERE role = 'student'")
+                    students = cur.fetchall()
+                    for tuple in students:
+                        for each in tuple:
+                            user_students.append(each)
                     for each in student_list:
-                        cur.execute("SELECT email FROM users WHERE role = 'student'")
-                        students = cur.fetchall()
-                        for email_tuple in students:
-                            if each in email_tuple:
-                                cur.execute("SELECT * FROM users WHERE email = %s", (each,))
-                                student = cur.fetchone()
-                                cur.execute(
-                                    'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                                    'VALUES (%s, %s, %s)',
-                                    (student['id'], session['id'], student['email'],)
-                                    )
+                        if each in user_students:
+                            cur.execute("SELECT * FROM users WHERE email = %s", (each,))
+                            student = cur.fetchone()
+                            cur.execute(
+                                'INSERT INTO user_sessions (student_id, session_id, student_email)'
+                                'VALUES (%s, %s, %s)',
+                                (student['id'], session['id'], student['email'],)
+                                )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
 
