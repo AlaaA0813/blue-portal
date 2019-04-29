@@ -16,13 +16,14 @@ def create_assignment(id):
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
+            type = request.form['types']
 
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute(
-                        'INSERT INTO assignments (assignment_name, assignment_description, course_id)'
-                        'VALUES (%s, %s, %s);',
-                        (assignment_name, assignment_description, course['id'])
+                        'INSERT INTO assignments (assignment_name, assignment_description, course_id, type)'
+                        'VALUES (%s, %s, %s, %s);',
+                        (assignment_name, assignment_description, course['id'], type)
                         )
 
             return redirect(url_for('courses.course', id=course[0]))
@@ -40,10 +41,11 @@ def edit_assignment(id):
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
+            type = request.form['types']
 
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("UPDATE assignments SET assignment_name = %s, assignment_description = %s WHERE id = %s", (assignment_name, assignment_description, id,))
+                    cur.execute("UPDATE assignments SET assignment_name = %s, assignment_description = %s, type = %s WHERE id = %s", (assignment_name, assignment_description, type, id,))
                     cur.execute("SELECT course_id FROM assignments WHERE id= %s", (id,))
                     course = cur.fetchone()
 

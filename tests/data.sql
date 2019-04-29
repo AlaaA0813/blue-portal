@@ -25,6 +25,6 @@ VALUES (2, 1, 'student@stevenscollege.edu'),
        (3, 3, 'student2@stevenscollege.edu'),
        (4, 3, 'student3@stevenscollege.edu');
 
-INSERT INTO assignments (assignment_name, assignment_description, course_id)
-VALUES ('Math Homework', 'Solve 2 + 2', 1),
-       ('English Homework', 'What is a comma?', 1);
+INSERT INTO assignments (assignment_name, assignment_description, course_id, type)
+VALUES ('Math Homework', 'Solve 2 + 2', 1, 'default'),
+       ('English Homework', 'What is a comma?', 1, 'default');

@@ -36,6 +36,6 @@ CREATE TABLE assignments (
     id bigserial PRIMARY KEY,
     assignment_name varchar(200) NOT NULL,
     assignment_description text NOT NULL,
-    course_id integer REFERENCES courses(id)
-    -- type varchar(7) NOT NULL CHECK (type IN ('default', 'file')),
+    course_id integer REFERENCES courses(id),
+    type varchar(7) NOT NULL CHECK (type IN ('default', 'file'))
 );
