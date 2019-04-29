@@ -11,12 +11,11 @@ bp = Blueprint('sessions', __name__, url_prefix='/sessions')
 @login_required
 def create_session(id):
     course = courses.get_course(id)
-
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         if request.method == 'POST':
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute('SELECT COUNT(*) FROM sessions WHERE course_id = %s', (course[0],))
+                    cur.execute('SELECT COUNT(*) FROM sessions WHERE course_id = %s', (course['id'],))
                     number_of_sessions = cur.fetchone()
                     number_of_sessions = int(number_of_sessions[0])
 
@@ -31,7 +30,6 @@ def create_session(id):
                         'VALUES (%s, %s, %s)',
                         (session_letter, id, session_time,)
                         )
-                    con.commit()
                     cur.execute("SELECT * FROM sessions ORDER BY id DESC")
                     session = cur.fetchone()
 
@@ -42,7 +40,7 @@ def create_session(id):
                         cur.execute(
                             'INSERT INTO user_sessions (student_id, session_id, student_email)'
                             'VALUES (%s, %s, %s)',
-                            (student[0], session[0], student[1],)
+                            (student['id'], session['id'], student['email'],)
                             )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
@@ -61,35 +59,33 @@ def edit_session(id):
     session = get_session(id)
     with db.get_db() as con:
         with con.cursor() as cur:
-            cur.execute("SELECT * FROM user_sessions WHERE session_id = %s", (session[0],))
+            cur.execute("SELECT * FROM user_sessions WHERE session_id = %s", (session['id'],))
             students_in_session = cur.fetchall()
 
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         if request.method == 'POST':
             session_time = request.form['session_time']
             student_list =  request.form.getlist('student_email')
+            user_students = []
 
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("UPDATE sessions SET meets = %s WHERE id = %s", (session_time, session[0],))
-                con.commit()
-
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("DELETE FROM user_sessions WHERE session_id = %s", (session[0],))
-                    con.commit()
+                    cur.execute("UPDATE sessions SET meets = %s WHERE id = %s", (session_time, session['id'],))
+                    cur.execute("DELETE FROM user_sessions WHERE session_id = %s", (session['id'],))
+                    cur.execute("SELECT email FROM users WHERE role = 'student'")
+                    students = cur.fetchall()
+                    for tuple in students:
+                        for each in tuple:
+                            user_students.append(each)
                     for each in student_list:
-                        cur.execute("SELECT email FROM users WHERE role = 'student'")
-                        students = cur.fetchall()
-                        for email_tuple in students:
-                            if each in email_tuple:
-                                cur.execute("SELECT * FROM users WHERE email = %s", (each,))
-                                student = cur.fetchone()
-                                cur.execute(
-                                    'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                                    'VALUES (%s, %s, %s);',
-                                    (student[0], session[0], student[1])
-                                    )
+                        if each in user_students:
+                            cur.execute("SELECT * FROM users WHERE email = %s", (each,))
+                            student = cur.fetchone()
+                            cur.execute(
+                                'INSERT INTO user_sessions (student_id, session_id, student_email)'
+                                'VALUES (%s, %s, %s)',
+                                (student['id'], session['id'], student['email'],)
+                                )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
 

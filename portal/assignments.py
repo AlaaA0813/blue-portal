@@ -12,7 +12,7 @@ bp = Blueprint('assignments', __name__, url_prefix='/assignments')
 @login_required
 def create_assignment(id):
     course = get_course(id)
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
@@ -22,7 +22,7 @@ def create_assignment(id):
                     cur.execute(
                         'INSERT INTO assignments (assignment_name, assignment_description, course_id)'
                         'VALUES (%s, %s, %s);',
-                        (assignment_name, assignment_description, course[0])
+                        (assignment_name, assignment_description, course['id'])
                         )
 
             return redirect(url_for('courses.course', id=course[0]))
@@ -36,7 +36,7 @@ def create_assignment(id):
 @login_required
 def edit_assignment(id):
     assignment = get_assignment(id)
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         if request.method == 'POST':
             assignment_name = request.form['assignment_name']
             assignment_description =  request.form['assignment_description']
@@ -59,10 +59,10 @@ def edit_assignment(id):
 def assignment(id):
     assignment = get_assignment(id)
 
-    if g.user[3] == 'student':
+    if g.user['role'] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment[0],))
+                cur.execute('SELECT * FROM assignments WHERE id = %s', (assignment['id'],))
                 assignment = cur.fetchone()
                 cur.execute("SELECT course_id FROM assignments WHERE id= %s", (id,))
                 course = cur.fetchone()

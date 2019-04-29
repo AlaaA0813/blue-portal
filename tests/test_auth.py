@@ -8,7 +8,7 @@ def test_login(client, auth):
         response = auth.login_student()
         assert response.status_code == 200
         client.get('/')
-        assert g.user[1] == "student@stevenscollege.edu"
+        assert g.user['email'] == "student@stevenscollege.edu"
 
 
     with client:

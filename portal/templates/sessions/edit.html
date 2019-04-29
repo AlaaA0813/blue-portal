@@ -5,33 +5,33 @@
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
 {% block nav %}
-  {% if g.user[3] == 'teacher' %}
+  {% if g.user['role'] == 'teacher' %}
     <li><a href="/" class="nav-link">Home</a></li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-<form method="post">
-  <label for="session_time">Session Time
-    <input type="text" name="session_time" value="{{session[3]}}" required />
-  </label>
-  <label for="student_email" id="email-label">Student Email
-    {% for student in students %}
-      <input type="text" name="student_email" value="{{student[2]}}" />
-    {% endfor %}
-  </label>
-  <input type="button" value="+" onclick="add_student()"></input>
-  <input type="submit" value="Update Roster" class="submit" />
+  <form method="post">
+    <label for="session_time">Session Time
+      <input type="text" name="session_time" value="{{ session['meets'] }}" required />
+    </label>
+    <label for="student_email" id="email-label">Student Email
+      {% for student in students %}
+        <input type="text" name="student_email" value="{{ student['email'] }}" />
+      {% endfor %}
+    </label>
+    <input type="button" value="+" onclick="add_student()"></input>
+    <input type="submit" value="Update Roster" class="submit" />
 
-  <script>
-    const add_student = () => {
-      let input = document.createElement("INPUT");
-      let label = document.getElementById('email-label')
-      input.setAttribute("type", "text");
-      input.setAttribute("name", "student_email");
-      input.style.width = "100%";
-      label.appendChild(input);
-    }
-  </script>
-</form>
+    <script>
+      const add_student = () => {
+        let input = document.createElement("INPUT");
+        let label = document.getElementById('email-label')
+        input.setAttribute("type", "text");
+        input.setAttribute("name", "student_email");
+        input.style.width = "100%";
+        label.appendChild(input);
+      }
+    </script>
+  </form>
 {% endblock %}

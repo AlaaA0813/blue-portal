@@ -5,27 +5,27 @@
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
 {% block nav %}
-  {% if g.user[3] == 'teacher' %}
+  {% if g.user['role'] == 'teacher' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Course List</a></li>
-  {% elif g.user[3] == 'student' %}
+  {% elif g.user['role'] == 'student' %}
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% if g.user[3] == 'teacher' %}
+  {% if g.user['role'] == 'teacher' %}
     <h2>Your Courses</h2>
       <ul>
         {% for course in courses %}
-          <li><a href={{ url_for('courses.course', id=course[0]) }} class="text-link">{{ course[1] }} - {{  course[2] }}</a></li>
+          <li><a href={{ url_for('courses.course', id=course[0]) }} class="text-link">{{ course['course_number'] }} - {{  course['course_title'] }}</a></li>
         {% endfor %}
       </ul>
 
   <a href={{ url_for('courses.create_course') }} class="submit">Add New Course</a>
 
-  {% elif g.user[3] == 'student' %}
+  {% elif g.user['role'] == 'student' %}
     <h2>Your Schedule</h2>
         <table>
           <tr>
@@ -34,17 +34,11 @@
             <th>Meets</th>
           </tr>
           {% for session in student_sessions %}
-
               <tr>
-                <td>{{ session[0] }}</td>
-                <td>
-                  <a href={{ url_for('courses.course', id=session[4]) }} class="text-link">
-                    {{ session[1] }} {{ session[2] }}
-                  </a>
-                </td>
-                <td>{{ session[3] }}</td>
+                <td>{{ session['course_number'] }}</td>
+                <td><a href={{ url_for('courses.course', id=session[4]) }} class="text-link"> {{ session['course_title'] }} {{ session['letter'] }} </a></td>
+                <td>{{ session['meets'] }}</td>
               </tr>
-
           {% endfor %}
         </table>
   {% endif %}
