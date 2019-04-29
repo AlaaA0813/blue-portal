@@ -42,5 +42,4 @@ def test_edit_sessions(client, auth):
 
                 cur.execute("SELECT * FROM user_sessions WHERE session_id = 1")
                 students = cur.fetchall()
-                print(students)
                 assert len(students) == 4
