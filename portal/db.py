@@ -79,7 +79,7 @@ def add_user_command():
         num += 1
         print('Would you like to continue?')
         answer = input('> ')
-        if answer != 'y':
+        if 'y' not in answer:
             cont = False
     click.echo(f'Added {num} users')
 

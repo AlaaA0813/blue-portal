@@ -45,7 +45,7 @@ def create_session(id):
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
 
-                    return redirect(url_for('courses.course', id=course[0]))
+                    return redirect(url_for('courses.course', id=id))
 
         return render_template('sessions/create.html')
 

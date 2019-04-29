@@ -76,6 +76,14 @@ def create_app(test_config=None):
                     cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
                     g.user = cur.fetchone()
 
+    @app.errorhandler(401)
+    def unauthorized(error):
+        return render_template('errors/unauthorized.html'), 401
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return render_template('errors/not_found.html'), 404
+
     return app
 
 def login_required(view):
