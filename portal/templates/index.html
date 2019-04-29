@@ -10,10 +10,10 @@
 
 {% block nav %}
   {% if g.user %}
-    {% if g.user[3] == 'teacher' %}
+    {% if g.user['role'] == 'teacher' %}
       <li><a href="/" class="nav-link">Home</a></li>
       <li><a href="/courses/list" class="nav-link">Course List</a></li>
-    {% elif g.user[3] == 'student' %}
+    {% elif g.user['role'] == 'student' %}
       <li><a href="/" class="nav-link">Home</a></li>
       <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
     {% endif %}
@@ -41,6 +41,6 @@
       {% endif %}
     {% endwith %}
   {% else %}
-    <p>Welcome {{g.user[4]}}!</p>
+    <p>Welcome {{ g.user['name'] }}!</p>
   {% endif %}
 {% endblock %}

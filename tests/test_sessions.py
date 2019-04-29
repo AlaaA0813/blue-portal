@@ -20,28 +20,27 @@ def test_create_session_teacher(client, auth, app, course):
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM sessions WHERE course_id = 1")
                 check = cur.fetchone()
-        assert check[0] is 1
-        assert check[1] is 'A'
+        assert check['id'] is 1
+        assert check['letter'] is 'A'
 
 def test_create_session_student(client, auth):
     assert client.get('/sessions/1/create').status_code == 302
     auth.login_student()
     assert client.get('/sessions/1/create').status_code == 401
 
-def test_edit_sessions(client, course, auth, app):
+def test_edit_sessions(client, auth):
     auth.login_teacher()
     assert client.get('sessions/1/edit').status_code == 200
-    client.post('sessions/1/edit', data = {'session_time': 'MTWRF', 'student_email': ['student@stevenscollege.edu', 'student2@stevenscollege.edu', 'student3@stevenscollege.edu', 'student4@stevenscollege.edu']})
+    with client:
+        client.post('sessions/1/edit', data = {'session_time': 'MTWRF', 'student_email': ['student@stevenscollege.edu', 'student2@stevenscollege.edu', 'student3@stevenscollege.edu', 'student4@stevenscollege.edu']})
 
-    with app.app_context():
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM sessions WHERE id = 1")
                 session = cur.fetchone()
-        assert session[3] == 'MTWRF'
+                assert session['meets'] == 'MTWRF'
 
-        with db.get_db() as con:
-            with con.cursor() as cur:
                 cur.execute("SELECT * FROM user_sessions WHERE session_id = 1")
                 students = cur.fetchall()
-        assert len(students) == 4
+                print(students)
+                assert len(students) == 4

@@ -51,7 +51,7 @@ def test_edit_course_teacher(client, course, auth, app):
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM courses WHERE id = 1")
                 course = cur.fetchone()
-    assert course[1] == 'test2'
+    assert course['course_number'] == 'test2'
 
 def test_edit_course_student(client, auth):
     auth.login_student()

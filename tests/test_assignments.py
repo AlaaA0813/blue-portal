@@ -7,14 +7,14 @@ from portal.assignments import get_assignment
 from conftest import auth
 
 def test_create_assignment_teacher(client, auth, app):
-    #testing get request
+    #Testing GET request
     assert client.get('/assignments/1/create').status_code == 302
     auth.login_teacher()
     assert client.get('/assignments/1/create').status_code == 200
     response = client.get('/assignments/1/create')
     assert b'Assignment Name' in response.data
     assert b'Assignment Description' in response.data
-    #testing post request
+    #Testing POST request
     client.post('/assignments/1/create', data={'assignment_name': 'test', 'assignment_description': 'testing'})
     with app.app_context():
         with db.get_db() as con:
@@ -39,7 +39,7 @@ def test_edit_assignment_teacher(client, auth, app):
                 cur.execute("SELECT * FROM assignments WHERE id = 1")
                 assignment = cur.fetchone()
 
-    assert assignment[1] == 'test2'
+    assert assignment['assignment_name'] == 'test2'
 
 def test_edit_assignment_student(client, auth):
     auth.login_student()

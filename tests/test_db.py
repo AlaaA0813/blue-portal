@@ -1,6 +1,7 @@
 import psycopg2
 import pytest
 
+from portal import db
 from portal.db import get_db, add_user
 
 
@@ -43,12 +44,11 @@ def test_add_user_command(runner, monkeypatch):
 
 def test_add_user(runner, monkeypatch, app):
     with app.app_context():
-        con = get_db()
-        cur = con.cursor()
-        check = cur.execute("SELECT * FROM users WHERE email = 'test'")
-        assert check == None
-        add_user('test', 'test', 'teacher', 'test')
-        check = cur.execute("SELECT * FROM users WHERE email = 'test'")
-        check = cur.fetchone()
-        assert check is not None
-        cur.close()
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                check = cur.execute("SELECT * FROM users WHERE email = 'test'")
+                assert check == None
+                add_user('test', 'test', 'teacher', 'test')
+                check = cur.execute("SELECT * FROM users WHERE email = 'test'")
+                check = cur.fetchone()
+                assert check is not None

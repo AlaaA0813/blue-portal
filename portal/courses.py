@@ -9,7 +9,7 @@ bp = Blueprint('courses', __name__, url_prefix='/courses')
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create_course():
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         if request.method == 'POST':
             course_number = request.form['course_number']
             course_title =  request.form['course_title']
@@ -19,7 +19,7 @@ def create_course():
                     cur.execute(
                         'INSERT INTO courses (course_number, course_title, instructor_id)'
                         'VALUES (%s, %s, %s);',
-                        (course_number, course_title, g.user[0])
+                        (course_number, course_title, g.user['id'])
                         )
                     con.commit()
 
@@ -36,21 +36,21 @@ def create_course():
 def list_courses():
     sessions = []
 
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM courses WHERE instructor_id = %s', (g.user[0],))
+                cur.execute('SELECT * FROM courses WHERE instructor_id = %s', (g.user['id'],))
                 courses = cur.fetchall()
 
         for each in courses:
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute('SELECT * FROM sessions WHERE course_id = %s', (each[0],))
+                    cur.execute('SELECT * FROM sessions WHERE course_id = %s', (each['id'],))
                     sessions.append(cur.fetchall())
 
         return render_template('courses/list.html', courses=courses, sessions=sessions)
 
-    elif g.user[3] == 'student':
+    elif g.user['role'] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute(
@@ -76,7 +76,7 @@ def list_courses():
 @login_required
 def edit_course(id):
     course = get_course(id)
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         if request.method == 'POST':
             course_number = request.form['course_number']
             course_title =  request.form['course_title']
@@ -97,19 +97,19 @@ def edit_course(id):
 @login_required
 def course(id):
     course = get_course(id)
-    if g.user[3] == 'teacher':
+    if g.user['role'] == 'teacher':
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course[0],))
+                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course['id'],))
                 assignments = cur.fetchall()
-                cur.execute('SELECT * FROM sessions WHERE course_id = %s', (course[0],))
+                cur.execute('SELECT * FROM sessions WHERE course_id = %s', (course['id'],))
                 sessions = cur.fetchall()
         return render_template('courses/course.html', assignments=assignments, course=course, sessions=sessions)
 
-    elif g.user[3] == 'student':
+    elif g.user['role'] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course[0],))
+                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course['id'],))
                 assignments = cur.fetchall()
 
         return render_template('courses/course.html', assignments=assignments, course=course)
