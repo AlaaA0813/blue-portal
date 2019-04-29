@@ -13,10 +13,10 @@
 {% block content %}
   <form method="post">
     <label for="assignment_name">Assignment Name
-      <input type="text" name="assignment_name" value="{{ assignment[1] }}" required/>
+      <input type="text" name="assignment_name" value="{{ assignment['assignment_name'] }}" required/>
     </label>
     <label for="assignment_description">Assignment Description
-      <input type="text" name="assignment_description" value="{{ assignment[2] }}" required/>
+      <input type="text" name="assignment_description" value="{{ assignment['assignment_description'] }}" required/>
     </label>
     <input type="submit" value="Update Assignment" class="submit" />
   </form>

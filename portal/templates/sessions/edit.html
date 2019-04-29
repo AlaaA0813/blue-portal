@@ -13,11 +13,11 @@
 {% block content %}
   <form method="post">
     <label for="session_time">Session Time
-      <input type="text" name="session_time" value="{{ session[3] }}" required />
+      <input type="text" name="session_time" value="{{ session['meets'] }}" required />
     </label>
     <label for="student_email" id="email-label">Student Email
       {% for student in students %}
-        <input type="text" name="student_email" value="{{ student[2] }}" />
+        <input type="text" name="student_email" value="{{ student['email'] }}" />
       {% endfor %}
     </label>
     <input type="button" value="+" onclick="add_student()"></input>
