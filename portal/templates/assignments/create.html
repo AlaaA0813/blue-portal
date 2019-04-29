@@ -18,6 +18,12 @@
     <label for="assignment_description">Assignment Description
       <input type="text" name="assignment_description" required/>
     </label>
+    <label for="assignment_type">Assignment Type
+      <div class="border">
+        <input type="radio" name="types" value="default" required  class="type"> Standard
+        <input type="radio" name="types" value="file" required  class="type"> File Upload
+      </div>
+    </label>
     <input type="submit" value="Add Assignment" class="submit" />
   </form>
 {% endblock %}

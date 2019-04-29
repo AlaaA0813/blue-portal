@@ -15,7 +15,7 @@ def test_create_assignment_teacher(client, auth, app):
     assert b'Assignment Name' in response.data
     assert b'Assignment Description' in response.data
     #Testing POST request
-    client.post('/assignments/1/create', data={'assignment_name': 'test', 'assignment_description': 'testing'})
+    client.post('/assignments/1/create', data={'assignment_name': 'test', 'assignment_description': 'testing', 'types': 'default'})
     with app.app_context():
         with db.get_db() as con:
             with con.cursor() as cur:
@@ -31,7 +31,7 @@ def test_create_assignment_student(client, auth):
 def test_edit_assignment_teacher(client, auth, app):
     auth.login_teacher()
     assert client.get('assignments/edit/1').status_code == 200
-    client.post('assignments/edit/1', data = {'assignment_name': 'test2', 'assignment_description': 'testing2'})
+    client.post('assignments/edit/1', data = {'assignment_name': 'test2', 'assignment_description': 'testing2', 'types': 'default'})
 
     with app.app_context():
         with db.get_db() as con:
