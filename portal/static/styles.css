@@ -65,6 +65,16 @@ label input {
   width: 100%;
 }
 
+input.type{
+  width: auto;
+  margin-left: 5%;
+}
+
+.border{
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 1rem;
+}
 
 
 /**
