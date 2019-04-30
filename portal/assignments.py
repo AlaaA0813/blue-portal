@@ -137,11 +137,7 @@ def upload_file(id):
     if g.user['role'] == 'student':
         if request.method == 'POST':
             file = request.files['file']
-            if 'file' not in request.files:
-                flash('No file part.')
-                return redirect(url_for('assignments.list'))
-            if file.filename == '':
-                flash('No selected file.')
+            if 'file' not in request.files or file.filename == '':
                 return redirect(url_for('assignments.list'))
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
