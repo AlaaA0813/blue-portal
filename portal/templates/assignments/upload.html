@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
+
+{% block nav %}
+  {% if g.user['role'] == 'teacher' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Course List</a></li>
+  {% elif g.user['role'] == 'student' %}
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/courses/list" class="nav-link">Your Schedule</a></li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h2>Upload New File</h2>
+    {% if g.user['role'] == 'student' %}
+      {% if assignment['type'] == 'file' %}
+        <form action="{{ url_for('assignments.upload_file', id=assignment[0]) }}" method="post" enctype="multipart/form-data">
+          <input type="file" name="file">
+          <input type="submit" value="Upload">
+        </form>
+      {% endif %}
+    {% endif %}
+
+{% endblock %}

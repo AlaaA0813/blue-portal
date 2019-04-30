@@ -1,10 +1,14 @@
-import psycopg2
+import psycopg2, os
 
-from flask import Flask, render_template, flash, Blueprint, g, request, redirect, url_for, abort
+from flask import Flask, current_app, render_template, flash, Blueprint, g, request, redirect, url_for, abort, send_from_directory
+from werkzeug.utils import secure_filename
 
 from portal import db, login_required
 from portal.courses import get_course
 from portal.sessions import get_sessions
+
+
+ALLOWED_EXTENSIONS = set(['txt', 'rtf', 'odf', 'ods', 'gnumeric', 'abw', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpe', 'jpeg', 'png', 'gif', 'svg', 'bmp', 'csv', 'ini'])
 
 
 bp = Blueprint('assignments', __name__, url_prefix='/assignments')
@@ -93,6 +97,7 @@ def assignment(id):
     else:
         abort(401)
 
+
 @bp.route('/grade/<int:id>/<int:student_id>', methods=('GET', 'POST'))
 @login_required
 def grade_assignment(id, student_id):
@@ -118,6 +123,31 @@ def grade_assignment(id, student_id):
 
     else:
         abort(401)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@bp.route('/<int:id>/upload', methods=['GET', 'POST'])
+@login_required
+def upload_file(id):
+    assignment = get_assignment(id)
+    if g.user['role'] == 'student':
+        if request.method == 'POST':
+            file = request.files['file']
+            if 'file' not in request.files:
+                flash('Incorrect Extension.')
+                return redirect(url_for('assignments.list'))
+            if file.filename == '':
+                flash('No selected file.')
+                return redirect(url_for('assignments.list'))
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                return render_template('assignments/upload.html', assignment=assignment)
+        return render_template('assignments/upload.html', assignment=assignment)
 
 
 def get_assignment(id):
