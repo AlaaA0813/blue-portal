@@ -1,3 +1,4 @@
+from io import BytesIO
 import pytest
 
 from portal.db import get_db
@@ -83,3 +84,9 @@ def test_grade_assignment_student(client, auth):
 def test_grade_fake_assignment(client, auth):
     auth.login_teacher()
     assert client.get('assignments/grade/9').status_code == 404
+
+def test_file_upload(client, auth):
+    auth.login_student()
+    data = {'field': 'value', 'file': (BytesIO(b'FILE CONTENT'), 'test.txt')}
+    rv = client.post('assignments/1/upload', content_type='multipart/form-data', data=data)
+    assert rv.status_code == 200

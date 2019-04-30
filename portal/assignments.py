@@ -138,7 +138,7 @@ def upload_file(id):
         if request.method == 'POST':
             file = request.files['file']
             if 'file' not in request.files:
-                flash('Incorrect Extension.')
+                flash('No file part.')
                 return redirect(url_for('assignments.list'))
             if file.filename == '':
                 flash('No selected file.')
