@@ -15,7 +15,7 @@ def test_create_assignment_teacher(client, auth, app):
     assert b'Assignment Name' in response.data
     assert b'Assignment Description' in response.data
     #Testing POST request
-    client.post('/assignments/1/create', data={'assignment_name': 'test', 'assignment_description': 'testing', 'types': 'default'})
+    client.post('/assignments/1/create', data={'assignment_name': 'test', 'assignment_description': 'testing', 'type': 'default', 'total_points': '30'})
     with app.app_context():
         with db.get_db() as con:
             with con.cursor() as cur:
@@ -31,7 +31,7 @@ def test_create_assignment_student(client, auth):
 def test_edit_assignment_teacher(client, auth, app):
     auth.login_teacher()
     assert client.get('assignments/edit/1').status_code == 200
-    client.post('assignments/edit/1', data = {'assignment_name': 'test2', 'assignment_description': 'testing2', 'types': 'default'})
+    client.post('assignments/edit/1', data = {'assignment_name': 'test2', 'assignment_description': 'testing2', 'type': 'default', 'total_points': '30'})
 
     with app.app_context():
         with db.get_db() as con:
@@ -40,6 +40,9 @@ def test_edit_assignment_teacher(client, auth, app):
                 assignment = cur.fetchone()
 
     assert assignment['assignment_name'] == 'test2'
+    assert assignment['assignment_description'] == 'testing2'
+    assert assignment['type'] == 'default'
+    assert assignment['total_points'] == 30
 
 def test_edit_assignment_student(client, auth):
     auth.login_student()
@@ -47,14 +50,29 @@ def test_edit_assignment_student(client, auth):
 
 def test_show_assignment_student(client, auth):
     auth.login_student()
-    assert client.get('assignments/1/assignment').status_code == 200
-    response = client.get('assignments/1/assignment')
+    assert client.get('assignments/1').status_code == 200
+    response = client.get('assignments/1')
     assert b'<h2>Math Homework</h2>' in response.data
 
 def test_show_assignment_teacher(client, auth):
     auth.login_teacher()
-    assert client.get('assignments/1/assignment').status_code == 401
+    assert client.get('assignments/1').status_code == 200
 
-def test_get_assignment(client, auth):
+def test_get_fake_assignment(client, auth):
     auth.login_student()
-    assert client.get('assignments/9/assignment').status_code == 404
+    assert client.get('assignments/9').status_code == 404
+
+def test_grade_assignment_teacher(client, auth):
+    auth.login_teacher()
+    assert client.get('assignments/grade/1').status_code == 200
+    response = client.get('assignments/grade/1')
+    assert b'<label for="points_scored">Points Earned'
+    assert b'<label for="feedback">Feedback'
+
+def test_grade_assignment_student(client, auth):
+    auth.login_student()
+    assert client.get('assignments/grade/1').status_code == 401
+
+def test_grade_fake_assignment(client, auth):
+    auth.login_teacher()
+    assert client.get('assignments/grade/9').status_code == 404

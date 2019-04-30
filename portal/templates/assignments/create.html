@@ -18,11 +18,14 @@
     <label for="assignment_description">Assignment Description
       <input type="text" name="assignment_description" required/>
     </label>
-    <label for="assignment_type">Assignment Type
+    <label for="assignment_type" class="half-label">Assignment Type
       <div class="border">
-        <input type="radio" name="types" value="default" required  class="type"> Standard
-        <input type="radio" name="types" value="file" required  class="type"> File Upload
+        <input type="radio" name="type" value="default" required  class="type"> Standard
+        <input type="radio" name="type" value="file" required  class="type"> File Upload
       </div>
+    </label>
+    <label for="total_points" class="half-label">Points Possible
+      <input type="number" name="total_points" required/>
     </label>
     <input type="submit" value="Add Assignment" class="submit" />
   </form>

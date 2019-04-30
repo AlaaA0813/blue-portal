@@ -16,15 +16,15 @@ VALUES ('A', 1, 'MWF'),
        ('B', 1, 'TR'),
        ('A', 2, 'MTWRF');
 
-INSERT INTO user_sessions (student_id, session_id, student_email)
-VALUES (2, 1, 'student@stevenscollege.edu'),
-       (3, 1, 'student2@stevenscollege.edu'),
-       (4, 1, 'student3@stevenscollege.edu'),
-       (2, 2, 'student@stevenscollege.edu'),
-       (3, 2, 'student2@stevenscollege.edu'),
-       (3, 3, 'student2@stevenscollege.edu'),
-       (4, 3, 'student3@stevenscollege.edu');
+INSERT INTO user_sessions (student_id, session_id, student_email, course_id)
+VALUES (2, 1, 'student@stevenscollege.edu', 1),
+       (3, 1, 'student2@stevenscollege.edu', 1),
+       (4, 1, 'student3@stevenscollege.edu', 1),
+       (2, 2, 'student@stevenscollege.edu', 1),
+       (3, 2, 'student2@stevenscollege.edu', 1),
+       (3, 3, 'student2@stevenscollege.edu', 2),
+       (4, 3, 'student3@stevenscollege.edu', 2);
 
-INSERT INTO assignments (assignment_name, assignment_description, course_id, type)
-VALUES ('Math Homework', 'Solve 2 + 2', 1, 'default'),
-       ('English Homework', 'What is a comma?', 1, 'default');
+INSERT INTO assignments (assignment_name, assignment_description, course_id, type, total_points)
+VALUES ('Math Homework', 'Solve 2 + 2', 1, 'default', 10),
+       ('English Homework', 'What is a comma?', 1, 'default', 20);

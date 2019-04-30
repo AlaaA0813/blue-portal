@@ -12,7 +12,24 @@
 {% endblock %}
 
 {% block content %}
-  {% if g.user['role'] == 'student' %}
+  {% if g.user['role'] == 'teacher' %}
+    <h2>{{ assignment['assignment_name'] }}</h2>
+    <p>{{ assignment['assignment_description'] }}</p>
+    <table>
+      {% for student in students %}
+          <tr>
+            <td>{{ student['student_email'] }}</td>
+            {% if student['student_id'] in submissions %}
+              <td>GRADED</td>
+            {% else %}
+              <td>
+                <a href={{ url_for('assignments.grade_assignment', id=assignment[0], student_id=student[0])}} class="text-link">Grade Assignment</a>
+              </td>
+            {% endif %}
+          </tr>
+      {% endfor %}
+    </table>
+  {% elif g.user['role'] == 'student' %}
     <h2>{{ assignment['assignment_name'] }}</h2>
     <p>{{ assignment['assignment_description'] }}</p>
   {% endif %}

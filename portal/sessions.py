@@ -38,9 +38,9 @@ def create_session(id):
                         student = cur.fetchone()
 
                         cur.execute(
-                            'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                            'VALUES (%s, %s, %s)',
-                            (student['id'], session['id'], student['email'],)
+                            'INSERT INTO user_sessions (student_id, session_id, student_email, course_id)'
+                            'VALUES (%s, %s, %s, %s)',
+                            (student['id'], session['id'], student['email'], course['id'],)
                             )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
@@ -57,6 +57,7 @@ def create_session(id):
 @login_required
 def edit_session(id):
     session = get_session(id)
+    course = courses.get_course(session['id'])
     with db.get_db() as con:
         with con.cursor() as cur:
             cur.execute("SELECT * FROM user_sessions WHERE session_id = %s", (session['id'],))
@@ -82,9 +83,9 @@ def edit_session(id):
                             cur.execute("SELECT * FROM users WHERE email = %s", (each,))
                             student = cur.fetchone()
                             cur.execute(
-                                'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                                'VALUES (%s, %s, %s)',
-                                (student['id'], session['id'], student['email'],)
+                                'INSERT INTO user_sessions (student_id, session_id, student_email, course_id)'
+                                'VALUES (%s, %s, %s, %s)',
+                                (student['id'], session['id'], student['email'], course['id'],)
                                 )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
