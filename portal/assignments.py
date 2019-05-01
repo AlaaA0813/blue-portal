@@ -138,7 +138,7 @@ def upload_file(id):
         if request.method == 'POST':
             file = request.files['file']
             if 'file' not in request.files or file.filename == '':
-                return redirect(url_for('assignments.list'))
+                return redirect(url_for('assignments.assignment', id=assignment[0]))
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))

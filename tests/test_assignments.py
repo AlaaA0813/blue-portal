@@ -7,6 +7,8 @@ from portal.assignments import get_assignment
 
 from conftest import auth
 
+from flask import url_for
+
 def test_create_assignment_teacher(client, auth, app):
     #Testing GET request
     assert client.get('/assignments/1/create').status_code == 302
@@ -88,5 +90,12 @@ def test_grade_fake_assignment(client, auth):
 def test_file_upload(client, auth):
     auth.login_student()
     data = {'field': 'value', 'file': (BytesIO(b'FILE CONTENT'), 'test.txt')}
-    rv = client.post('assignments/1/upload', content_type='multipart/form-data', data=data)
-    assert rv.status_code == 200
+    response = client.post('assignments/1/upload', content_type='multipart/form-data', data=data)
+    assert response.status_code == 200
+
+def test_file_upload_render_template(client, auth):
+    auth.login_student()
+    assert client.get('assignments/1/upload').status_code == 200
+    assert client.get('assignments/1/assignment').status_code == 200
+    response = client.get('assignments/1/assignment')
+    assert b'Upload File' in response.data
