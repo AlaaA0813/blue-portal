@@ -4,6 +4,7 @@ from flask import Flask, render_template, flash, Blueprint, g, request, redirect
 
 from portal import db, login_required
 from portal.courses import get_course
+from portal.sessions import get_sessions
 
 
 bp = Blueprint('assignments', __name__, url_prefix='/assignments')
@@ -23,11 +24,21 @@ def create_assignment(id):
                 with con.cursor() as cur:
                     cur.execute(
                         'INSERT INTO assignments (assignment_name, assignment_description, course_id, type, total_points)'
-                        'VALUES (%s, %s, %s, %s, %s);',
-                        (assignment_name, assignment_description, course['id'], type, points)
-                        )
+                        'VALUES (%s, %s, %s, %s, %s)'
+                        'RETURNING id;',
+                        (assignment_name, assignment_description, course['id'], type, points))
+                    assignment_added = cur.fetchone()[0]
+                    course_sessions = get_sessions(id)
+                    for session in course_sessions:
+                        cur.execute("SELECT student_id FROM user_sessions WHERE session_id = %s", (session['id'],))
+                        students = cur.fetchall()
+                    for student in students:
+                        cur.execute(
+                            'INSERT INTO submissions (points_scored, feedback, graded, assignment_id, student_id)'
+                            'VALUES (null, null, %s, %s, %s);',
+                            (False, assignment_added, student[0]))
 
-            return redirect(url_for('courses.course', id=course[0]))
+            return redirect(url_for('courses.course', id=id))
 
         return render_template('assignments/create.html')
 
@@ -61,16 +72,20 @@ def edit_assignment(id):
 @login_required
 def assignment(id):
     assignment = get_assignment(id)
+    course = get_course(assignment['course_id'])
 
     if g.user['role'] == 'teacher':
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM user_sessions WHERE course_id = %s', (assignment['course_id'],))
-                students = cur.fetchall()
-                cur.execute('SELECT student_id FROM submissions WHERE assignment_id = %s', (assignment['id'],))
+                cur.execute("""
+                    SELECT s.*,
+                           u.name
+                    FROM submissions AS s
+                    JOIN users AS u ON u.id = s.student_id
+                    WHERE s.assignment_id = %s""", (assignment['id'],))
                 submissions = cur.fetchall()
 
-        return render_template('assignments/list.html', assignment=assignment, students=students, course=assignment['course_id'], submissions=submissions)
+        return render_template('assignments/list.html', assignment=assignment, course=course, submissions=submissions)
 
     elif g.user['role'] == 'student':
         return render_template('assignments/list.html', assignment=assignment, course=assignment['course_id'])
@@ -84,25 +99,25 @@ def grade_assignment(id, student_id):
     assignment = get_assignment(id)
     student = get_student(student_id)
 
-    if request.method == 'POST':
-        if g.user['role'] == 'teacher':
+    if g.user['role'] == 'teacher':
+        if request.method == 'POST':
             points_scored = request.form['points_scored']
             feedback =  request.form['feedback']
 
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute(
-                                'INSERT INTO submissions(points_scored, feedback)'
-                                'VALUES (%s, %s);',
-                                (points_scored, feedback,)
-                                )
+                    cur.execute("""UPDATE submissions
+                                   SET points_scored = %s,
+                                       feedback = %s,
+                                       graded = %s
+                                    WHERE student_id = %s AND assignment_id = %s""", (points_scored, feedback, True, student_id, id))
 
-            return redirect(url_for('assignments/<int:id>', id=id))
+            return redirect(url_for('assignments.assignment', id=id))
 
-        else:
-            abort(401)
+        return render_template('assignments/grade.html', assignment=assignment)
 
-    return render_template('assignments/grade.html')
+    else:
+        abort(401)
 
 
 def get_assignment(id):

@@ -29,9 +29,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE user_sessions (
   student_id integer REFERENCES users(id),
-  session_id integer REFERENCES sessions(id),
-  student_email text REFERENCES users(email),
-  course_id integer REFERENCES courses(id)
+  session_id integer REFERENCES sessions(id)
 );
 
 CREATE TABLE assignments (
@@ -45,8 +43,9 @@ CREATE TABLE assignments (
 
 CREATE TABLE submissions (
   id bigserial PRIMARY KEY,
-  points_scored integer NOT NULL,
+  points_scored integer,
   feedback text,
+  graded boolean NOT NULL,
   assignment_id integer REFERENCES assignments(id),
   student_id integer REFERENCES users(id)
 );

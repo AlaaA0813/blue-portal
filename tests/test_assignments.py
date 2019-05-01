@@ -62,16 +62,23 @@ def test_get_fake_assignment(client, auth):
     auth.login_student()
     assert client.get('assignments/9').status_code == 404
 
-def test_grade_assignment_teacher(client, auth):
+def test_grade_assignment_teacher(client, auth, app):
     auth.login_teacher()
-    assert client.get('assignments/grade/1').status_code == 200
-    response = client.get('assignments/grade/1')
-    assert b'<label for="points_scored">Points Earned'
-    assert b'<label for="feedback">Feedback'
+    assert client.get('assignments/grade/1/2').status_code == 200
+    client.post('assignments/grade/1/2', data = {'points_scored': 8, 'feedback': 'Great Work!'})
+
+    with app.app_context():
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM submissions WHERE assignment_id = 1 AND student_id = 2")
+                submission = cur.fetchone()
+
+    assert submission['points_scored'] == 8
+    assert submission['feedback'] == 'Great Work!'
 
 def test_grade_assignment_student(client, auth):
     auth.login_student()
-    assert client.get('assignments/grade/1').status_code == 401
+    assert client.get('assignments/grade/1/2').status_code == 401
 
 def test_grade_fake_assignment(client, auth):
     auth.login_teacher()

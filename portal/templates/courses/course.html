@@ -30,7 +30,7 @@
 
       <ul>
         {% for assignment in assignments %}
-          <li> <a href={{ url_for('assignments.edit_assignment', id=assignment[0]) }} class="edit">Edit</a> - <a href={{ url_for('assignments.assignment', id=assignment[0])}}>{{ assignment['assignment_name'] }}</a></li>
+          <li> <a href={{ url_for('assignments.edit_assignment', id=assignment[0]) }} class="edit">Edit</a> - <a href={{ url_for('assignments.assignment', id=assignment[0])}} class="text-link">{{ assignment['assignment_name'] }}</a></li>
         {% endfor %}
       </ul>
 
