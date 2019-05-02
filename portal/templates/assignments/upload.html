@@ -23,6 +23,9 @@
           <input type="submit" value="Upload">
         </form>
       {% endif %}
+      {% if uploaded %}
+        <p>File Uploaded!</p>
+      {% endif %}
     {% endif %}
 
 {% endblock %}

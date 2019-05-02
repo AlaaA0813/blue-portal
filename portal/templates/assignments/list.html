@@ -30,10 +30,10 @@
       {% endfor %}
     </table>
   {% elif g.user['role'] == 'student' %}
-    {% if assignment['type'] == 'file' %}
       <h2>{{ assignment['assignment_name'] }}</h2>
       <p>{{ assignment['assignment_description'] }}</p>
-      <a href={{ url_for('assignments.upload_file', id=assignment[0]) }} class="edit">Upload File</a>
+    {% if assignment['type'] == 'file' %}
+          <a href={{ url_for('assignments.upload_file', id=assignment[0]) }} class="edit">Upload File</a>
     {% endif %}
   {% endif %}
 {% endblock %}
