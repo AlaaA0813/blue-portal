@@ -97,3 +97,8 @@ def test_file_upload_render_template(client, auth):
     assert client.get('assignments/1').status_code == 200
     response = client.get('assignments/1/upload')
     assert b'Upload New File' in response.data
+
+def test_fake_file_upload(client, auth):
+    auth.login_student()
+    response = client.post('assignments/1/upload', content_type='multipart/form-data', data = {'field': 'value', 'file': (BytesIO(b'FILE CONTENT'), '')})
+    assert response.status_code == 302
