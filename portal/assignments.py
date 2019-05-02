@@ -142,9 +142,8 @@ def upload_file(id):
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-                uploaded = True
 
-            return render_template('assignments/upload.html', assignment=assignment, uploaded=uploaded)
+            return render_template('assignments/upload.html', assignment=assignment, file=allowed_file(file.filename))
 
         return render_template('assignments/upload.html', assignment=assignment)
 
