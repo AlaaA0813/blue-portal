@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS submissions;
 DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS user_sessions CASCADE;
 DROP TABLE IF EXISTS sessions;
@@ -28,8 +29,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE user_sessions (
   student_id integer REFERENCES users(id),
-  session_id integer REFERENCES sessions(id),
-  student_email text REFERENCES users(email)
+  session_id integer REFERENCES sessions(id)
 );
 
 CREATE TABLE assignments (
@@ -37,5 +37,15 @@ CREATE TABLE assignments (
     assignment_name varchar(200) NOT NULL,
     assignment_description text NOT NULL,
     course_id integer REFERENCES courses(id),
-    type varchar(7) NOT NULL CHECK (type IN ('default', 'file'))
+    type varchar(7) NOT NULL CHECK (type IN ('default', 'file')),
+    total_points integer NOT NULL
+);
+
+CREATE TABLE submissions (
+  id bigserial PRIMARY KEY,
+  points_scored integer,
+  feedback text,
+  graded boolean NOT NULL,
+  assignment_id integer REFERENCES assignments(id),
+  student_id integer REFERENCES users(id)
 );

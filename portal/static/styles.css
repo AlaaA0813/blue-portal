@@ -65,6 +65,20 @@ label input {
   width: 100%;
 }
 
+label input[type="number"] {
+  width: 25%;
+  display: block;
+}
+
+label[for="total_points"] {
+  display: inline-block;
+}
+
+.half-label {
+  width: 45%;
+  display: inline-block;
+}
+
 input.type{
   width: auto;
   margin-left: 5%;
@@ -177,6 +191,12 @@ li {
  .submit {
    background-color: #ccc;
    padding: 5px;
+   margin: 0 auto;
+   font-size: 1.5rem;
+ }
+
+ form .submit {
+   display: block;
  }
 
  /**

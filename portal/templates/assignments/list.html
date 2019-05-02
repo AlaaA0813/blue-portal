@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}{{ course['course_number'] }} {{ course['course_title'] }}{% endblock %}
+{% block title %}{{ course['id'] }} {{ course['course_title'] }}{% endblock %}
 
 {% block logout %}<a href="/logout" class="logout">Logout</a>{% endblock %}
 
@@ -12,7 +12,24 @@
 {% endblock %}
 
 {% block content %}
-  {% if g.user['role'] == 'student' %}
+  {% if g.user['role'] == 'teacher' %}
+    <h2>{{ assignment['assignment_name'] }}</h2>
+    <p>{{ assignment['assignment_description'] }}</p>
+    <table>
+      {% for submission in submissions %}
+        <tr>
+          <td>{{ submission['name'] }}</td>
+          {% if submission['graded'] %}
+            <td>{{ submission['points_scored'] }} / {{ assignment['total_points'] }}</td>
+            <td>{{ submission['points_scored']/assignment['total_points']*100 }} %</td>
+          {% else %}
+            <td>-- / {{ assignment['total_points'] }}</td>
+            <td><a href={{ url_for('assignments.grade_assignment', id=assignment[0], student_id=submission[5]) }} class="text-link">Grade Assignment</a></td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </table>
+  {% elif g.user['role'] == 'student' %}
     <h2>{{ assignment['assignment_name'] }}</h2>
     <p>{{ assignment['assignment_description'] }}</p>
   {% endif %}

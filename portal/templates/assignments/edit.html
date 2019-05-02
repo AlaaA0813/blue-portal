@@ -18,16 +18,19 @@
     <label for="assignment_description">Assignment Description
       <input type="text" name="assignment_description" value="{{ assignment['assignment_description'] }}" required/>
     </label>
-    <label for="assignment_type">Assignment Type
+    <label for="assignment_type" class="half-label">Assignment Type
       <div class="border">
         {% if assignment['type'] == 'default' %}
-          <input type="radio" name="types" value="default" disabled checked class="type"> Standard
-          <input type="radio" name="types" value="file" disabled  class="type"> File Upload
+          <input type="radio" name="type" value="default" disabled checked class="type"> Standard
+          <input type="radio" name="type" value="file" disabled  class="type"> File Upload
         {% elif assignment['type'] == 'file' %}
-          <input type="radio" name="types" value="default" disabled class="type"> Standard
-          <input type="radio" name="types" value="file" disabled checked class="type"> File Upload
+          <input type="radio" name="type" value="default" disabled class="type"> Standard
+          <input type="radio" name="type" value="file" disabled checked class="type"> File Upload
         {% endif %}
       </div>
+    </label>
+    <label for="total_points" class="half-label">Points Possible
+      <input type="number" min ="0" name="total_points" value="{{assignment['total_points']}}" required/>
     </label>
     <input type="submit" value="Update Assignment" class="submit" />
   </form>

@@ -38,9 +38,9 @@ def create_session(id):
                         student = cur.fetchone()
 
                         cur.execute(
-                            'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                            'VALUES (%s, %s, %s)',
-                            (student['id'], session['id'], student['email'],)
+                            'INSERT INTO user_sessions (student_id, session_id)'
+                            'VALUES (%s, %s)',
+                            (student['id'], session['id'])
                             )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
@@ -57,9 +57,15 @@ def create_session(id):
 @login_required
 def edit_session(id):
     session = get_session(id)
+
     with db.get_db() as con:
         with con.cursor() as cur:
-            cur.execute("SELECT * FROM user_sessions WHERE session_id = %s", (session['id'],))
+            cur.execute("""
+                        SELECT us.*,
+                               u.email
+                        FROM user_sessions AS us
+                        JOIN users AS u ON us.student_id = u.id
+                        WHERE session_id = %s""", (session['id'],))
             students_in_session = cur.fetchall()
 
     if g.user['role'] == 'teacher':
@@ -82,9 +88,9 @@ def edit_session(id):
                             cur.execute("SELECT * FROM users WHERE email = %s", (each,))
                             student = cur.fetchone()
                             cur.execute(
-                                'INSERT INTO user_sessions (student_id, session_id, student_email)'
-                                'VALUES (%s, %s, %s)',
-                                (student['id'], session['id'], student['email'],)
+                                'INSERT INTO user_sessions (student_id, session_id)'
+                                'VALUES (%s, %s)',
+                                (student['id'], session['id'],)
                                 )
                     cur.execute("SELECT course_id FROM sessions WHERE id= %s", (id,))
                     course = cur.fetchone()
@@ -107,3 +113,14 @@ def get_session(id):
         abort(404)
 
     return session
+
+def get_sessions(id):
+    with db.get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT * FROM sessions WHERE course_id = %s", (id,))
+            sessions = cur.fetchall()
+
+    if sessions is None:
+        abort(404)
+
+    return sessions
