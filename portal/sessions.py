@@ -57,7 +57,6 @@ def create_session(id):
 @login_required
 def edit_session(id):
     session = get_session(id)
-    course = courses.get_course(session['course_id'])
 
     with db.get_db() as con:
         with con.cursor() as cur:
