@@ -6,7 +6,6 @@ from portal import db
 from portal.assignments import get_assignment
 
 from conftest import auth
-
 from flask import url_for
 
 def test_create_assignment_teacher(client, auth, app):
