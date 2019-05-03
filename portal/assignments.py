@@ -4,7 +4,7 @@ from flask import Flask, current_app, render_template, flash, Blueprint, g, requ
 from werkzeug.utils import secure_filename
 
 from portal import db, login_required
-from portal.courses import get_course
+# from portal.courses import get_course
 from portal.sessions import get_sessions
 
 

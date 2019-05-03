@@ -42,8 +42,23 @@
       <ul>
         {% for assignment in assignments %}
           <li><a href={{ url_for('assignments.assignment', id=assignment[0]) }} class="text-link">{{ assignment['assignment_name'] }}</a></li>
-        {% endfor %}
       </ul>
+      {% endfor %}
+
+      <table>
+        {% for submission in submissions %}
+          <tr>
+            <td>{{ submission['name'] }}</td>
+            {% if submission['graded'] %}
+              <td>{{ submission['points_scored'] }} / {{ assignment['total_points'] }}</td>
+              <td>{{ submission['points_scored']/assignment['total_points']*100 }} %</td>
+            {% else %}
+              <td>-- / {{ assignment['total_points'] }}</td>
+              <td>--</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </table>
 
   {% endif %}
 
