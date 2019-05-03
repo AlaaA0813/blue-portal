@@ -67,6 +67,8 @@ def edit_session(id):
                         JOIN users AS u ON us.student_id = u.id
                         WHERE session_id = %s""", (session['id'],))
             students_in_session = cur.fetchall()
+            cur.execute("SELECT * FROM assignments WHERE course_id = %s", (session['course_id'],))
+            assignments = cur.fetchall()
 
     if g.user['role'] == 'teacher':
         if request.method == 'POST':
@@ -97,7 +99,7 @@ def edit_session(id):
 
             return redirect(url_for('courses.course', id=course[0]))
 
-        return render_template('sessions/edit.html', session=session, students=students_in_session)
+        return render_template('sessions/edit.html', session=session, students=students_in_session, assignments=assignments)
 
     else:
         abort(401)

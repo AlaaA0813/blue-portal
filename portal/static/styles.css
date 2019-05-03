@@ -34,11 +34,21 @@ body {
   footer {
     display: flex;
     justify-content: space-between;
+    background-color: #ccc;
   }
   footer h2,
   footer address {
-    width: 40%;
+    width: 30%;
   }
+}
+
+footer address {
+  text-align: right;
+  padding-right: 3rem;
+}
+
+footer img {
+  height: 140px;
 }
 
 main {
@@ -124,6 +134,17 @@ li {
 
 main p {
   background-color: #f0f0f0;
+  width: 90%;
+}
+
+.welcome {
+  background-color: #a6093d;
+  text-align: center;
+  font-size: 3rem;
+  color: white;
+  width: 70%;
+  padding: 10rem;
+  margin: 0 auto;
 }
 
  /*
@@ -195,8 +216,9 @@ main p {
  .submit {
    background-color: #ccc;
    padding: 5px;
-   margin: 0 auto;
+   margin: 1rem auto 0;
    font-size: 1.5rem;
+   display: inline-block;
  }
 
  form .submit {
@@ -211,4 +233,13 @@ main p {
    display: flex;
    justify-content: space-between;
    background-color: #a6093d;
+ }
+
+ .half {
+   width: 100%;
+ }
+
+ .half-container {
+   display: flex;
+   justify-content: flex-start;
  }

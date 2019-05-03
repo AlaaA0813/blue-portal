@@ -17,23 +17,25 @@
 {% block content %}
   {% if g.user['role'] == 'teacher' %}
     <h2>Your Sessions</h2>
-        <ul>
+      <table>
           {% for session in sessions %}
-            <li><a href={{ url_for('sessions.edit_session', id=session[0]) }} class="edit">Edit</a> - {{ course['course_number'] }} {{ session['letter'] }} - {{ session['meets'] }}</li>
+            <tr>
+              <td><a href={{ url_for('sessions.edit_session', id=session[0]) }} class="edit">Edit</a></td>
+              <td>{{ course['course_number'] }} {{ session['letter'] }} - {{ session['meets'] }}</td>
+            </tr>
           {% endfor %}
-        </ul>
-
+      </table>
       <a href={{ url_for('sessions.create_session', id=course[0]) }} class="submit">Add New Session</a>
 
-
     <h2>Your Assignments</h2>
-
-      <ul>
+      <table>
         {% for assignment in assignments %}
-          <li> <a href={{ url_for('assignments.edit_assignment', id=assignment[0]) }} class="edit">Edit</a> - <a href={{ url_for('assignments.assignment', id=assignment[0])}} class="text-link">{{ assignment['assignment_name'] }}</a></li>
+          <tr>
+            <td><a href={{ url_for('assignments.edit_assignment', id=assignment[0]) }} class="edit">Edit</a></td>
+            <td><a href={{ url_for('assignments.assignment', id=assignment[0])}} class="text-link">{{ assignment['assignment_name'] }}</a></td>
+          </tr>
         {% endfor %}
-      </ul>
-
+      </table>
     <a href={{ url_for('assignments.create_assignment', id=course[0]) }} class="submit">Add New Assignment</a>
 
   {% elif g.user['role'] == 'student' %}
