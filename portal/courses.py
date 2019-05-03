@@ -121,7 +121,7 @@ def course(id):
                        s.graded
                 FROM assignments AS a
                 JOIN submissions AS s ON a.id = s.assignment_id
-                WHERE s.student_id = %s""", (g.user['id'],))
+                WHERE s.student_id = %s AND a.course_id = %s""", (g.user['id'], id,))
                 assignments = cur.fetchall()
 
         return render_template('courses/course.html', course=course, assignments=assignments)
