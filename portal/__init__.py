@@ -9,6 +9,7 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         DB_NAME='portal',
         DB_USER='portal_user',
+        UPLOAD_FOLDER='portal/uploads/',
     )
 
     if test_config is None:
@@ -22,6 +23,7 @@ def create_app(test_config=None):
     app.register_blueprint(sessions.bp)
     from . import assignments
     app.register_blueprint(assignments.bp)
+
 
     from . import db
     db.init_app(app)

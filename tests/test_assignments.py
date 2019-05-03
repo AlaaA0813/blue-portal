@@ -1,3 +1,4 @@
+from io import BytesIO
 import pytest
 
 from portal.db import get_db
@@ -5,6 +6,7 @@ from portal import db
 from portal.assignments import get_assignment
 
 from conftest import auth
+from flask import url_for
 
 def test_create_assignment_teacher(client, auth, app):
     #Testing GET request
@@ -83,3 +85,20 @@ def test_grade_assignment_student(client, auth):
 def test_grade_fake_assignment(client, auth):
     auth.login_teacher()
     assert client.get('assignments/grade/9').status_code == 404
+
+def test_file_upload(client, auth):
+    auth.login_student()
+    client.post('assignments/1/upload', content_type='multipart/form-data', data = {'field': 'value', 'file': (BytesIO(b'FILE CONTENT'), './test.txt')})
+    assert client.get('assignments/1/upload').status_code == 200
+
+def test_file_upload_render_template(client, auth):
+    auth.login_student()
+    assert client.get('assignments/1/upload').status_code == 200
+    assert client.get('assignments/1').status_code == 200
+    response = client.get('assignments/1/upload')
+    assert b'Upload New File' in response.data
+
+def test_fake_file_upload(client, auth):
+    auth.login_student()
+    response = client.post('assignments/1/upload', content_type='multipart/form-data', data = {'field': 'value', 'file': (BytesIO(b'FILE CONTENT'), '')})
+    assert response.status_code == 302
