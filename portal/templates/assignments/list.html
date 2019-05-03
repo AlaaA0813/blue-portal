@@ -32,8 +32,12 @@
   {% elif g.user['role'] == 'student' %}
       <h2>{{ assignment['assignment_name'] }}</h2>
       <p>{{ assignment['assignment_description'] }}</p>
-    {% if assignment['type'] == 'file' %}
-          <a href={{ url_for('assignments.upload_file', id=assignment[0]) }} class="edit">Upload File</a>
-    {% endif %}
+      {% if submission['graded'] %}
+        <h2>Feedback</h2>
+        <p>{{ submission['feedback'] }}</p>
+      {% if assignment['type'] == 'file' and not submission['graded'] %}
+        <a href={{ url_for('assignments.upload_file', id=assignment[0]) }} class="edit">Upload File</a>
+      {% endif %}
+      {% endif %}
   {% endif %}
 {% endblock %}

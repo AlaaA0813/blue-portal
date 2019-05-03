@@ -3,7 +3,8 @@ import psycopg2
 from flask import Flask, render_template, flash, Blueprint, g, request, redirect, url_for, abort
 
 from portal import db, login_required
-from portal.assignments import get_assignment
+
+
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -97,7 +98,6 @@ def edit_course(id):
 @login_required
 def course(id):
     course = get_course(id)
-    assignment = get_assignment(id)
 
     if g.user['role'] == 'teacher':
         with db.get_db() as con:
@@ -112,14 +112,19 @@ def course(id):
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("""
-                    SELECT s.*,
-                           u.name
-                    FROM submissions AS s
-                    JOIN users AS u ON u.id = s.student_id
-                    WHERE s.assignment_id = %s""", (assignment['id'],))
-                submissions = cur.fetchall()
+                SELECT a.id,
+                       a.assignment_name,
+                       a.course_id,
+                       a.total_points,
+                       s.points_scored,
+                       s.student_id,
+                       s.graded
+                FROM assignments AS a
+                JOIN submissions AS s ON a.id = s.assignment_id
+                WHERE s.student_id = %s""", (g.user['id'],))
+                assignments = cur.fetchall()
 
-        return render_template('courses/course.html', assignment=assignment, course=course, submissions=submissions)
+        return render_template('courses/course.html', course=course, assignments=assignments)
 
 
     else:
