@@ -122,6 +122,10 @@ li {
   padding: 5px 0;
 }
 
+main p {
+  background-color: #f0f0f0;
+}
+
  /*
   * TABLE
   */

@@ -4,6 +4,7 @@ from flask import Flask, render_template, flash, Blueprint, g, request, redirect
 
 from portal import db, login_required
 
+
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -97,6 +98,7 @@ def edit_course(id):
 @login_required
 def course(id):
     course = get_course(id)
+
     if g.user['role'] == 'teacher':
         with db.get_db() as con:
             with con.cursor() as cur:
@@ -109,10 +111,20 @@ def course(id):
     elif g.user['role'] == 'student':
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('SELECT * FROM assignments WHERE course_id = %s', (course['id'],))
+                cur.execute("""
+                SELECT a.id,
+                       a.assignment_name,
+                       a.course_id,
+                       a.total_points,
+                       s.points_scored,
+                       s.student_id,
+                       s.graded
+                FROM assignments AS a
+                JOIN submissions AS s ON a.id = s.assignment_id
+                WHERE s.student_id = %s""", (g.user['id'],))
                 assignments = cur.fetchall()
 
-        return render_template('courses/course.html', assignments=assignments, course=course)
+        return render_template('courses/course.html', course=course, assignments=assignments)
 
 
     else:

@@ -92,7 +92,12 @@ def assignment(id):
         return render_template('assignments/list.html', assignment=assignment, course=course, submissions=submissions)
 
     elif g.user['role'] == 'student':
-        return render_template('assignments/list.html', assignment=assignment, course=assignment['course_id'])
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM submissions WHERE assignment_id = %s AND student_id = %s", (id, g.user['id'],))
+                submission = cur.fetchone()
+
+        return render_template('assignments/list.html', assignment=assignment, course=course, submission=submission)
 
     else:
         abort(401)
